@@ -1,7 +1,7 @@
 {
-  "name": "redux-webrtc",
+  "name": "react-redux-webrtc",
   "version": "0.1.0",
-  "description": "WebRTC redux state integration (WIP)",
+  "description": "React higher order components for redux-webrtc (WIP)",
   "main": "lib/index.js",
   "files": [
     "lib"
