@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/actions.js | redux-redux-idle-monitor API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/cchamberlain/react-redux-idle-monitor" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-configureActions">configureActions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createContext">createContext</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createDispatcher">createDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-defineAction">defineAction</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-reset">reset</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-start">start</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-stop">stop</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CURRENT_KEY">CURRENT_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-IDLEMONITOR_ACTIVITY">IDLEMONITOR_ACTIVITY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-IDLEMONITOR_PAUSE">IDLEMONITOR_PAUSE</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-IS_IDLE_KEY">IS_IDLE_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-IS_PAUSED_KEY">IS_PAUSED_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LAST_ACTIVE_KEY">LAST_ACTIVE_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LAST_EVENT_KEY">LAST_EVENT_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LIB_NAME">LIB_NAME</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ROOT_STATE_KEY">ROOT_STATE_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TIMEOUT_ID_KEY">TIMEOUT_ID_KEY</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-createActionName">createActionName</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-getActions">getActions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-getActiveEvents">getActiveEvents</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-getLevel">getLevel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-getThresholds">getThresholds</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-getUseFastState">getUseFastState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-getUseLocalState">getUseLocalState</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-configure">configure</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-createLogger">createLogger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-configureMiddleware">configureMiddleware</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-configureReducer">configureReducer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-validateOpts">validateOpts</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/actions.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+import createDispatcher from &apos;./dispatcher&apos;
+
+/** Back to initial state */
+export const start = context =&gt; (dispatch, getState) =&gt; {
+  const { log, initialActionName } = context
+  log.info(&apos;idle monitor started&apos;)
+  const { detection, action } = createDispatcher(context)(dispatch, getState)
+  //** MOVE DETECTION FURTHER IN, POSSIBLY MIDDLEWARE
+  detection.start()
+  return action.schedule(initialActionName)
+}
+
+export const stop = context =&gt; (dispatch, getState) =&gt; {
+  const { log, activeEvents } = context
+  log.info(&apos;idle monitor stopped&apos;)
+  const { timeout, detection } = createDispatcher(context)(dispatch, getState)
+  timeout.clear()
+  detection.stop()
+}
+
+export const reset = context =&gt; (dispatch, getState) =&gt; {
+  const { log } = context
+  log.info(&apos;idle monitor resetting...&apos;)
+  dispatch(stop(context))
+  dispatch(start(context))
+}
+
+export const defineAction = (actionName, action, timeoutMS) =&gt; [ actionName, { action, timeoutMS } ]
+
+export default function configureActions(context) {
+  return { start: start(context), stop: stop(context), reset: reset(context) }
+}
+
+/*
+const _updateState = context =&gt; actionName =&gt; args =&gt; {
+  const { log, useExternalState, setFastState } = context
+  const { current, isIdle, timeoutID, lastActive, lastEvent } = args
+  if(useExternalState &amp;&amp; (lastActive || lastEvent || timeoutID)) {
+    log.warn(`UPDATING EXTERNAL STATE =&gt; ${JSON.stringify(args)}`)
+    setExternalState(args)
+    if(!(current || isIdle)) {
+      log.warn(&apos;BYPASSING REDUX ACTION&apos;)
+      return
+    }
+  }
+  log.warn(`UPDATING REDUX STATE =&gt; ${JSON.stringify(args)}`)
+  return createAction(actionName)(args)
+}
+
+const _updateActivity = context =&gt; _updateState(context)(IDLEMONITOR_ACTIVITY)
+*/
+
+/** Responsible for clearing old timeout and scheduling new one or immediately executing, returns new timeoutID or undefined */
+/*
+const _scheduleAction = (context, dispatcher) =&gt; actionName =&gt; (dispatch, getState) =&gt; {
+  const { log, getTimeoutMS } = context
+  const { timeout } = dispatcher
+  timeout.clear()
+  const timeoutMS = timeout.timeoutMS(actionName)
+  const isPaused = timeoutMS ? false : true
+  const execute = () =&gt; dispatch(_executeAction(context, dispatcher)({ actionName, isPaused }))
+  if(timeoutMS &gt; 0)
+    return setTimeout(() =&gt; execute(), timeoutMS)
+  else
+    execute()
+}
+*/
+
+/** Responsible for executing an action */
+/*
+const _executeAction = (context, dispatcher) =&gt; ({ actionName, isPaused }) =&gt; (dispatch, getState) =&gt; {
+  const { log, getAction, getNextActionName } = context
+  const { stateType, detection } = dispatcher
+  const nextActionName = getNextActionName(actionName)
+  const wasPaused = stateType.redux.isPaused
+
+  let timeoutID = next &amp;&amp; !isPaused ? dispatch(_scheduleAction(context)(nextActionName)) : null
+
+  if(isPaused &amp;&amp; !wasPaused)
+    detection.stop()
+  if(!isPaused &amp;&amp; wasPaused)
+    detection.start()
+
+  const payload = { current: actionName, timeoutID, isIdle: typeof nextActionName === &apos;undefined&apos;, isPaused }
+  dispatch(_updateState(context)(actionName)(payload))
+
+  getAction(actionName)(dispatch, getState, { ...context, controls: configureActions(context) })
+}
+*/
+
+
+/** One of the event listeners triggered an activity occurrence event */
+/*
+const _activityAction = context =&gt; e =&gt; (dispatch, getState) =&gt; {
+  const { log, initialActionName, initialAction } = context
+  const state = translateState(context, getState)
+  if (_shouldActivityUpdate(context)(e, state)) {
+    const action = (state.current === initialActionName
+      ? _updateActivity(context)( { lastActive: +new Date()
+                                  , lastEvent: { x: e.pageX, y: e.pageY }
+                                  })
+      : start(context))
+    if(action)
+      dispatch(action)
+  }
+}
+*/
+
+/** Detects whether the activity should trigger a redux update */
+/*
+const _shouldActivityUpdate = context =&gt; ({ type, pageX, pageY }, state) =&gt; {
+  if(type !== &apos;mousemove&apos;)
+    return true
+
+  const { lastActive, lastEvent: { x, y } } = state
+  if (typeof pageX === &apos;undefined&apos; || typeof pageY === &apos;undefined&apos;)
+    return false
+  if(Math.abs(pageX - x) &lt; thresholds.mouse &amp;&amp; Math.abs(pageY - y) &lt; thresholds.mouse)
+    return false
+
+  // SKIP UPDATE IF ITS UNDER THE THRESHOLD MS FROM THE LAST UPDATE
+  let elapsedMS = (+new Date()) - lastActive
+  if (elapsedMS &lt; thresholds.elapsedMS)
+    return false
+  console.warn(`elapsedMS WAS ${elapsedMS}, lastActive=&gt;${lastActive}`)
+  return true
+}
+
+const thresholds =  { mouse: 15
+                    , elapsedMS: 1000
+                    }
+                    */
+
+
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.6)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
