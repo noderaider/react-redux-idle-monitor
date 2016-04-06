@@ -1,25 +1,39 @@
+import React, { Component, propTypes } from 'react'
+import { connect } from 'react-redux'
 
-import { validateOpts } from './validate'
-import { getActions, getActiveEvents, getUseFastState, getUseLocalState, getThresholds, getLevel } from './defaults'
-import createContext from './context'
 
-import configureReducer from './reducer'
-import configureActions, { defineAction } from './actions'
+class IdleMonitor extends Component {
+  static propTypes =  { actionName: PropTypes.string.isRequired
+                      , actionOrdinal: PropTypes.string.isRequired
+                      , actionNames: PropTypes.arrayOf(PropTypes.string).isRequired
+                      , usingFastState: PropTypes.bool.isRequired
+                      , usingLocalState: PropTypes.bool.isRequired
+                      , usingWebRTCState: PropTypes.bool.isRequired
+                      , usingWebSocketsState: PropTypes.bool.isRequired
+                      }
 
-const configure = ( { actions = getActions()
-                    , activeEvents = getActiveEvents()
-                    , useFastState = getUseFastState()
-                    , useLocalState = getUseLocalState()
-                    , thresholds = getThresholds()
-                    , level = getLevel()
-                    } = {} ) => {
-  const opts = { actions, activeEvents, useFastState, useLocalState, thresholds, level }
+}
+
+
+const mapStateToProps = (state, ownProps) => {
+  const { idle } = state
+
   if(process.env.NODE_ENV !== 'production')
-    validateOpts(opts)
-  const context = createContext(opts)
-  return  { reducer: configureReducer(context)
-          , actions: configureActions(context)
+    validateState(idle)
+
+  return  { actionName: idle.current
+          , actionOrdinal: idle.actionNames.indexOf(idle.current)
+          , usingFastState: idle.useFastStore
+          , usingLocalState: idle.useLocalStore
+          , usingWebRTCState: false
+          , usingWebSocketsState: false
           }
 }
-export default configure
-export { defineAction }
+
+const validateState = idle => {
+  assert.ok(idle, `idle state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)
+  const { current, actionNames } = idle
+  assert.ok(current, 'state requires current property.')
+}
+
+export default connect(mapStateToProps)(IdleMonitor)
