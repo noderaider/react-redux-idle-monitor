@@ -15,7 +15,8 @@ class IdleMonitor extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps) => {
+
+const mapIdleStateToProps = (state, ownProps) => {
   const { idle } = state
 
   if(process.env.NODE_ENV !== 'production')

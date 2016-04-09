@@ -34,7 +34,8 @@
   ],
   "dependencies": {
     "redux-addons": "*",
-    "redux-idle-monitor": "*"
+    "redux-idle-monitor": "*",
+    "redux-mux": "*"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
