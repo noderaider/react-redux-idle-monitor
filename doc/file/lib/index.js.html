@@ -32,50 +32,135 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  </ul>
+  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-connectIdleMonitor">connectIdleMonitor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mapIdleStateToProps">mapIdleStateToProps</a></span></span></li>
+</ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">lib/index.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import React, { Component, propTypes } from &apos;react&apos;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import React, { Component, PropTypes } from &apos;react&apos;
 import { connect } from &apos;react-redux&apos;
+import { assert } from &apos;chai&apos;
+import { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from &apos;redux-idle-monitor/lib/constants&apos;
 
+const badgeStyle =  { fontSize: &apos;0.95em&apos;
+                    }
 
-class IdleMonitor extends Component {
-  static propTypes =  { actionName: PropTypes.string.isRequired
-                      , actionOrdinal: PropTypes.string.isRequired
-                      , actionNames: PropTypes.arrayOf(PropTypes.string).isRequired
-                      , usingFastState: PropTypes.bool.isRequired
-                      , usingLocalState: PropTypes.bool.isRequired
-                      , usingWebRTCState: PropTypes.bool.isRequired
-                      , usingWebSocketsState: PropTypes.bool.isRequired
-                      }
+const panelStyle =  { fontSize: &apos;0.75em&apos;
+                    , maxWidth: 720
+                    , maxHeight: 70
+                    , paddingTop: 5
+                    , paddingLeft: 5
+                    , paddingBottom: 5
+                    , paddingRight: 5
+                    , marginLeft: &apos;auto&apos;
+                    , marginRight: &apos;auto&apos;
+                    , textAlign: &apos;center&apos;
+                    }
+const ulStyle = { listStyle: &apos;none&apos;
+                , maxWidth: 720
+                , width: 720
+                , textAlign: &apos;center&apos;
+                , marginLeft: &apos;auto&apos;
+                , marginRight: &apos;auto&apos;
+                , border: &apos;1px solid rgb(120, 120, 120)&apos;
+                , borderBottom: 0
+                , borderTopLeftRadius: 3
+                , borderTopRightRadius: 3
+                , padding: 5
+                , bottom: 0
+                , marginBottom: 0
+                , position: &apos;fixed&apos;
+                , zIndex: 99999999
+                , opacity: 0.9
+                }
+const ulActive =  { ...ulStyle
+                  , backgroundColor: &apos;rgb(230, 240, 230)&apos;
+                  }
+const ulIdle=  { ...ulStyle
+                  , backgroundColor: &apos;rgb(240, 230, 230)&apos;
+                  }
+const liStyle = { display: &apos;inline&apos;
+                , marginLeft:4
+                , marginRight:4
+                }
 
+const activeStyle = { ...badgeStyle
+                    , color: &apos;rgb(20, 200, 50)&apos;
+                    }
+const idleStyle = { ...badgeStyle
+                  , color: &apos;rgb(230, 100, 100)&apos;
+                  }
+const trueStyle = { ...badgeStyle
+                  , color: &apos;rgb(50, 200, 200)&apos;
+                  }
+const falseStyle =  { ...badgeStyle
+                    , color: &apos;rgb(200, 50, 50)&apos;
+                    }
+
+const titleStyle = { display: &apos;inline&apos; }
+
+const GenericIdleMonitor = props =&gt; {
+  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props
+  const { x, y } = lastEvent
+  return (
+    &lt;div style={panelStyle}&gt;
+      &lt;ul style={isIdle ? ulIdle : ulActive}&gt;
+        &lt;li style={liStyle}&gt;&lt;h6 style={titleStyle}&gt;idleMonitor&lt;/h6&gt;&lt;/li&gt;
+        &lt;li style={liStyle}&gt;idleStatus &lt;span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}&gt;[{idleStatus}]&lt;/span&gt;&lt;/li&gt;
+        &lt;li style={liStyle}&gt;isIdle: {isIdle === true ? &lt;span style={trueStyle}&gt;[true]&lt;/span&gt; : &lt;span style={falseStyle}&gt;[false]&lt;/span&gt;}&lt;/li&gt;
+        &lt;li style={liStyle}&gt;isPaused: {isPaused === true ? &lt;span style={trueStyle}&gt;[true]&lt;/span&gt; : &lt;span style={falseStyle}&gt;[false]&lt;/span&gt;}&lt;/li&gt;
+        &lt;li style={liStyle}&gt;isDetectionRunning: {isDetectionRunning === true ? &lt;span style={trueStyle}&gt;[true]&lt;/span&gt; : &lt;span style={falseStyle}&gt;[false]&lt;/span&gt;}&lt;/li&gt;
+        &lt;li style={liStyle}&gt;lastActive: {lastActive}&lt;/li&gt;
+        &lt;li style={liStyle}&gt;lastEvent: ({x}, {y})&lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;div&gt;
+        &lt;children {...props} /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
 }
 
+class IdleMonitor extends Component {
+  static propTypes =  { showStatus: PropTypes.bool.isRequired
+                      , idleStatus: PropTypes.string.isRequired
+                      , isIdle: PropTypes.bool.isRequired
+                      , isPaused: PropTypes.bool.isRequired
+                      , isDetectionRunning: PropTypes.bool.isRequired
+                      , lastActive: PropTypes.number.isRequired
+                      , lastEvent: PropTypes.object.isRequired
+                      };
+  static defaultProps = { showStatus: true };
+  render() {
+    const { showStatus, children } = this.props
+    return showStatus ? &lt;GenericIdleMonitor {...this.props} /&gt; : &lt;children {...this.props} /&gt;
+  }
+}
 
-const mapStateToProps = (state, ownProps) =&gt; {
-  const { idle } = state
+export const mapIdleStateToProps = (state, ownProps) =&gt; {
+  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent } = bisectState(state)
 
-  if(process.env.NODE_ENV !== &apos;production&apos;)
-    validateState(idle)
-
-  return  { actionName: idle.current
-          , actionOrdinal: idle.actionNames.indexOf(idle.current)
-          , usingFastState: idle.useFastStore
-          , usingLocalState: idle.useLocalStore
-          , usingWebRTCState: false
-          , usingWebSocketsState: false
+  return  { idleStatus
+          , isIdle
+          , isPaused
+          , isDetectionRunning
+          , lastActive
+          , lastEvent
           }
 }
 
-const validateState = idle =&gt; {
-  assert.ok(idle, `idle state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level &apos;idle&apos; node)`)
-  const { current, actionNames } = idle
-  assert.ok(current, &apos;state requires current property.&apos;)
+const bisectState = state =&gt; {
+  if(process.env.NODE_ENV !== &apos;production&apos;) {
+    assert.ok(state, &apos;state is required&apos;)
+    assert.ok(state[ROOT_STATE_KEY], `&apos;${ROOT_STATE_KEY}&apos; state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level &apos;idle&apos; node)`)
+  }
+  return state[ROOT_STATE_KEY]
 }
 
-export default connect(mapStateToProps)(IdleMonitor)
+export const connectIdleMonitor = ReactComponent =&gt; connect(mapIdleStateToProps)(ReactComponent)
+
+export default connectIdleMonitor(IdleMonitor)
 </code></pre>
 
 </div>

@@ -10,42 +10,43 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import React, { Component, propTypes } from 'react'\r\nimport { connect } from 'react-redux'\r\n\r\n\r\nclass IdleMonitor extends Component {\r\n  static propTypes =  { actionName: PropTypes.string.isRequired\r\n                      , actionOrdinal: PropTypes.string.isRequired\r\n                      , actionNames: PropTypes.arrayOf(PropTypes.string).isRequired\r\n                      , usingFastState: PropTypes.bool.isRequired\r\n                      , usingLocalState: PropTypes.bool.isRequired\r\n                      , usingWebRTCState: PropTypes.bool.isRequired\r\n                      , usingWebSocketsState: PropTypes.bool.isRequired\r\n                      }\r\n\r\n}\r\n\r\n\r\nconst mapStateToProps = (state, ownProps) => {\r\n  const { idle } = state\r\n\r\n  if(process.env.NODE_ENV !== 'production')\r\n    validateState(idle)\r\n\r\n  return  { actionName: idle.current\r\n          , actionOrdinal: idle.actionNames.indexOf(idle.current)\r\n          , usingFastState: idle.useFastStore\r\n          , usingLocalState: idle.useLocalStore\r\n          , usingWebRTCState: false\r\n          , usingWebSocketsState: false\r\n          }\r\n}\r\n\r\nconst validateState = idle => {\r\n  assert.ok(idle, `idle state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)\r\n  const { current, actionNames } = idle\r\n  assert.ok(current, 'state requires current property.')\r\n}\r\n\r\nexport default connect(mapStateToProps)(IdleMonitor)\r\n"
+    "content": "import React, { Component, PropTypes } from 'react'\nimport { connect } from 'react-redux'\nimport { assert } from 'chai'\nimport { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'\n\nconst badgeStyle =  { fontSize: '0.95em'\n                    }\n\nconst panelStyle =  { fontSize: '0.75em'\n                    , maxWidth: 720\n                    , maxHeight: 70\n                    , paddingTop: 5\n                    , paddingLeft: 5\n                    , paddingBottom: 5\n                    , paddingRight: 5\n                    , marginLeft: 'auto'\n                    , marginRight: 'auto'\n                    , textAlign: 'center'\n                    }\nconst ulStyle = { listStyle: 'none'\n                , maxWidth: 720\n                , width: 720\n                , textAlign: 'center'\n                , marginLeft: 'auto'\n                , marginRight: 'auto'\n                , border: '1px solid rgb(120, 120, 120)'\n                , borderBottom: 0\n                , borderTopLeftRadius: 3\n                , borderTopRightRadius: 3\n                , padding: 5\n                , bottom: 0\n                , marginBottom: 0\n                , position: 'fixed'\n                , zIndex: 99999999\n                , opacity: 0.9\n                }\nconst ulActive =  { ...ulStyle\n                  , backgroundColor: 'rgb(230, 240, 230)'\n                  }\nconst ulIdle=  { ...ulStyle\n                  , backgroundColor: 'rgb(240, 230, 230)'\n                  }\nconst liStyle = { display: 'inline'\n                , marginLeft:4\n                , marginRight:4\n                }\n\nconst activeStyle = { ...badgeStyle\n                    , color: 'rgb(20, 200, 50)'\n                    }\nconst idleStyle = { ...badgeStyle\n                  , color: 'rgb(230, 100, 100)'\n                  }\nconst trueStyle = { ...badgeStyle\n                  , color: 'rgb(50, 200, 200)'\n                  }\nconst falseStyle =  { ...badgeStyle\n                    , color: 'rgb(200, 50, 50)'\n                    }\n\nconst titleStyle = { display: 'inline' }\n\nconst GenericIdleMonitor = props => {\n  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props\n  const { x, y } = lastEvent\n  return (\n    <div style={panelStyle}>\n      <ul style={isIdle ? ulIdle : ulActive}>\n        <li style={liStyle}><h6 style={titleStyle}>idleMonitor</h6></li>\n        <li style={liStyle}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>\n        <li style={liStyle}>isIdle: {isIdle === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\n        <li style={liStyle}>isPaused: {isPaused === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\n        <li style={liStyle}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\n        <li style={liStyle}>lastActive: {lastActive}</li>\n        <li style={liStyle}>lastEvent: ({x}, {y})</li>\n      </ul>\n      <div>\n        <children {...props} />\n      </div>\n    </div>\n  )\n}\n\nclass IdleMonitor extends Component {\n  static propTypes =  { showStatus: PropTypes.bool.isRequired\n                      , idleStatus: PropTypes.string.isRequired\n                      , isIdle: PropTypes.bool.isRequired\n                      , isPaused: PropTypes.bool.isRequired\n                      , isDetectionRunning: PropTypes.bool.isRequired\n                      , lastActive: PropTypes.number.isRequired\n                      , lastEvent: PropTypes.object.isRequired\n                      };\n  static defaultProps = { showStatus: true };\n  render() {\n    const { showStatus, children } = this.props\n    return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />\n  }\n}\n\nexport const mapIdleStateToProps = (state, ownProps) => {\n  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent } = bisectState(state)\n\n  return  { idleStatus\n          , isIdle\n          , isPaused\n          , isDetectionRunning\n          , lastActive\n          , lastEvent\n          }\n}\n\nconst bisectState = state => {\n  if(process.env.NODE_ENV !== 'production') {\n    assert.ok(state, 'state is required')\n    assert.ok(state[ROOT_STATE_KEY], `'${ROOT_STATE_KEY}' state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)\n  }\n  return state[ROOT_STATE_KEY]\n}\n\nexport const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)\n\nexport default connectIdleMonitor(IdleMonitor)\n"
   },
   {
     "__docId__": 1,
-    "kind": "class",
+    "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "IdleMonitor",
+    "name": "badgeStyle",
     "memberof": "lib/index.js",
-    "longname": "lib/index.js~IdleMonitor",
+    "longname": "lib/index.js~badgeStyle",
     "access": null,
     "export": false,
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 5,
+    "lineNumber": 6,
     "undocument": true,
-    "interface": false,
-    "extends": [
-      "react~Component"
-    ]
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
   },
   {
     "__docId__": 2,
     "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "mapStateToProps",
+    "name": "panelStyle",
     "memberof": "lib/index.js",
-    "longname": "lib/index.js~mapStateToProps",
+    "longname": "lib/index.js~panelStyle",
     "access": null,
     "export": false,
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 18,
+    "lineNumber": 9,
     "undocument": true,
     "type": {
       "types": [
@@ -58,15 +59,36 @@
     "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "validateState",
+    "name": "ulStyle",
     "memberof": "lib/index.js",
-    "longname": "lib/index.js~validateState",
+    "longname": "lib/index.js~ulStyle",
     "access": null,
     "export": false,
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 33,
+    "lineNumber": 20,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 4,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "ulActive",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~ulActive",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 37,
     "undocument": true,
     "type": {
       "types": [
@@ -76,6 +98,277 @@
   },
   {
     "__docId__": 5,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "ulIdle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~ulIdle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 40,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "liStyle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~liStyle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 43,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 7,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "activeStyle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~activeStyle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 48,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "idleStyle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~idleStyle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 51,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 9,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "trueStyle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~trueStyle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 54,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 10,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "falseStyle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~falseStyle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 57,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 11,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "titleStyle",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~titleStyle",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 61,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 12,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "GenericIdleMonitor",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~GenericIdleMonitor",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 63,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 13,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "IdleMonitor",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~IdleMonitor",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 84,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "react~Component"
+    ]
+  },
+  {
+    "__docId__": 14,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "render",
+    "memberof": "lib/index.js~IdleMonitor",
+    "longname": "lib/index.js~IdleMonitor#render",
+    "access": null,
+    "description": null,
+    "lineNumber": 94,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 15,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "mapIdleStateToProps",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~mapIdleStateToProps",
+    "access": null,
+    "export": true,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": "{mapIdleStateToProps}",
+    "description": null,
+    "lineNumber": 100,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 16,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "bisectState",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~bisectState",
+    "access": null,
+    "export": false,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 112,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 17,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "connectIdleMonitor",
+    "memberof": "lib/index.js",
+    "longname": "lib/index.js~connectIdleMonitor",
+    "access": null,
+    "export": true,
+    "importPath": "react-redux-idle-monitor",
+    "importStyle": "{connectIdleMonitor}",
+    "description": null,
+    "lineNumber": 120,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 19,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -88,7 +381,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 6,
+    "__docId__": 20,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -101,7 +394,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 7,
+    "__docId__": 21,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -114,7 +407,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 8,
+    "__docId__": 22,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -127,7 +420,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 9,
+    "__docId__": 23,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -140,7 +433,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 10,
+    "__docId__": 24,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -153,7 +446,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 11,
+    "__docId__": 25,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -166,7 +459,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 12,
+    "__docId__": 26,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -179,7 +472,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 13,
+    "__docId__": 27,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -192,7 +485,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 14,
+    "__docId__": 28,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -205,7 +498,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 15,
+    "__docId__": 29,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -218,7 +511,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 16,
+    "__docId__": 30,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -231,7 +524,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 17,
+    "__docId__": 31,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -244,7 +537,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 18,
+    "__docId__": 32,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -257,7 +550,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 19,
+    "__docId__": 33,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -270,7 +563,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 20,
+    "__docId__": 34,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -283,7 +576,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 21,
+    "__docId__": 35,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -296,7 +589,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 22,
+    "__docId__": 36,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -309,7 +602,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 23,
+    "__docId__": 37,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -322,7 +615,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 24,
+    "__docId__": 38,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -335,7 +628,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 25,
+    "__docId__": 39,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -348,7 +641,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 26,
+    "__docId__": 40,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -361,7 +654,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 27,
+    "__docId__": 41,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -374,7 +667,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 28,
+    "__docId__": 42,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -387,7 +680,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 29,
+    "__docId__": 43,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -400,7 +693,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 30,
+    "__docId__": 44,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -413,7 +706,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 31,
+    "__docId__": 45,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -426,7 +719,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 32,
+    "__docId__": 46,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -439,7 +732,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 33,
+    "__docId__": 47,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -452,7 +745,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 34,
+    "__docId__": 48,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -465,7 +758,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 35,
+    "__docId__": 49,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -478,7 +771,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 36,
+    "__docId__": 50,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -491,7 +784,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 37,
+    "__docId__": 51,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -504,7 +797,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 38,
+    "__docId__": 52,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -517,7 +810,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 39,
+    "__docId__": 53,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -530,7 +823,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 40,
+    "__docId__": 54,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -543,7 +836,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 41,
+    "__docId__": 55,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -556,7 +849,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 42,
+    "__docId__": 56,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -569,7 +862,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 43,
+    "__docId__": 57,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -582,7 +875,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 44,
+    "__docId__": 58,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -595,7 +888,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 45,
+    "__docId__": 59,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -608,7 +901,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 46,
+    "__docId__": 60,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -621,7 +914,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 47,
+    "__docId__": 61,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -634,7 +927,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 48,
+    "__docId__": 62,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -647,7 +940,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 49,
+    "__docId__": 63,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -660,7 +953,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 50,
+    "__docId__": 64,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -673,7 +966,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 51,
+    "__docId__": 65,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -686,7 +979,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 53,
+    "__docId__": 67,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -699,7 +992,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 54,
+    "__docId__": 68,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -712,7 +1005,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 55,
+    "__docId__": 69,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -725,7 +1018,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 56,
+    "__docId__": 70,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -738,7 +1031,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 57,
+    "__docId__": 71,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -751,7 +1044,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 58,
+    "__docId__": 72,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -764,7 +1057,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 59,
+    "__docId__": 73,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -777,7 +1070,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 60,
+    "__docId__": 74,
     "kind": "external",
     "static": true,
     "variation": null,

@@ -1,6 +1,15 @@
 {
   "coverage": "0%",
-  "expectCount": 0,
+  "expectCount": 2,
   "actualCount": 0,
-  "files": {}
+  "files": {
+    "lib/index.js": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        120,
+        100
+      ]
+    }
+  }
 }
