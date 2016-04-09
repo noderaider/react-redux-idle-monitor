@@ -2,77 +2,23 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { assert } from 'chai'
 import { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'
+import getStyle from './style'
 
-const badgeStyle =  { fontSize: '0.95em'
-                    }
-
-const panelStyle =  { fontSize: '0.75em'
-                    , maxWidth: 720
-                    , maxHeight: 70
-                    , paddingTop: 5
-                    , paddingLeft: 5
-                    , paddingBottom: 5
-                    , paddingRight: 5
-                    , marginLeft: 'auto'
-                    , marginRight: 'auto'
-                    , textAlign: 'center'
-                    }
-const ulStyle = { listStyle: 'none'
-                , maxWidth: 720
-                , width: 720
-                , textAlign: 'center'
-                , marginLeft: 'auto'
-                , marginRight: 'auto'
-                , border: '1px solid rgb(120, 120, 120)'
-                , borderBottom: 0
-                , borderTopLeftRadius: 3
-                , borderTopRightRadius: 3
-                , padding: 5
-                , bottom: 0
-                , marginBottom: 0
-                , position: 'fixed'
-                , zIndex: 99999999
-                , opacity: 0.9
-                }
-const ulActive =  { ...ulStyle
-                  , backgroundColor: 'rgb(230, 240, 230)'
-                  }
-const ulIdle=  { ...ulStyle
-                  , backgroundColor: 'rgb(240, 230, 230)'
-                  }
-const liStyle = { display: 'inline'
-                , marginLeft:4
-                , marginRight:4
-                }
-
-const activeStyle = { ...badgeStyle
-                    , color: 'rgb(20, 200, 50)'
-                    }
-const idleStyle = { ...badgeStyle
-                  , color: 'rgb(230, 100, 100)'
-                  }
-const trueStyle = { ...badgeStyle
-                  , color: 'rgb(50, 200, 200)'
-                  }
-const falseStyle =  { ...badgeStyle
-                    , color: 'rgb(200, 50, 50)'
-                    }
-
-const titleStyle = { display: 'inline' }
 
 const GenericIdleMonitor = props => {
+  const { panel, title, ulIdle, ulActive, li, activeStyle, idleStyle, trueStyle, falseStyle } = getStyle(props)
   const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props
   const { x, y } = lastEvent
   return (
-    <div style={panelStyle}>
+    <div style={panel}>
       <ul style={isIdle ? ulIdle : ulActive}>
-        <li style={liStyle}><h6 style={titleStyle}>idleMonitor</h6></li>
-        <li style={liStyle}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>
-        <li style={liStyle}>isIdle: {isIdle === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
-        <li style={liStyle}>isPaused: {isPaused === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
-        <li style={liStyle}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
-        <li style={liStyle}>lastActive: {lastActive}</li>
-        <li style={liStyle}>lastEvent: ({x}, {y})</li>
+        <li style={li}><h6 style={title}>idleMonitor</h6></li>
+        <li style={li}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>
+        <li style={li}>isIdle: {isIdle === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
+        <li style={li}>isPaused: {isPaused === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
+        <li style={li}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
+        <li style={li}>lastActive: {lastActive}</li>
+        <li style={li}>lastEvent: ({x}, {y})</li>
       </ul>
       <div>
         <children {...props} />
@@ -90,7 +36,8 @@ class IdleMonitor extends Component {
                       , lastActive: PropTypes.number.isRequired
                       , lastEvent: PropTypes.object.isRequired
                       };
-  static defaultProps = { showStatus: true };
+  static defaultProps = { showStatus: true
+                        , scheme: 'solarized'};
   render() {
     const { showStatus, children } = this.props
     return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />
