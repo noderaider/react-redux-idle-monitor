@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "react-redux-idle-monitor/lib/style.js~getstyle",
+    "function/index.html#static-function-getStyle",
+    "<span>getStyle</span> <span class=\"search-result-import-path\">react-redux-idle-monitor/lib/style.js</span>",
+    "function"
+  ],
+  [
     "react-redux-idle-monitor~mapidlestatetoprops",
     "variable/index.html#static-variable-mapIdleStateToProps",
     "<span>mapIdleStateToProps</span> <span class=\"search-result-import-path\">react-redux-idle-monitor</span>",
@@ -345,6 +351,12 @@ window.esdocSearchIndex = [
     "lib/index.js",
     "file/lib/index.js.html",
     "lib/index.js",
+    "file"
+  ],
+  [
+    "lib/style.js",
+    "file/lib/style.js.html",
+    "lib/style.js",
     "file"
   ]
 ]

@@ -32,15 +32,44 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-connectIdleMonitor">connectIdleMonitor</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getStyle">getStyle</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-connectIdleMonitor">connectIdleMonitor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mapIdleStateToProps">mapIdleStateToProps</a></span></span></li>
 </ul>
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="react-redux-idle-monitor">react-redux-idle-monitor</h1>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="-react-redux-idle-monitor-https-npmjs-com-packages-react-redux-idle-monitor-"><a href="https://npmjs.com/packages/react-redux-idle-monitor">react-redux-idle-monitor</a></h1>
 <p>React Redux higher order component for idle state monitoring.</p>
-<p><strong>This project is in active development and is not ready for production use.</strong></p>
+<p><code>npm i -S react-redux-idle-monitor</code></p>
+<p>Works in tandem with <a href="https://npmjs.com/packages/redux-idle-monitor">redux-idle-monitor</a> to connect information about a users activity / idle state into your React components.</p>
+<p>This project also includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the &quot;showStatus&quot; prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user and additional information.</p>
+<h4 id="usage">Usage</h4>
+<pre><code class="lang-js"><code class="source-code prettyprint">import React, { Component, PropTypes } from &apos;react&apos;
+import { connectIdleMonitor } from &apos;react-redux-idle-monitor&apos;
+
+class MyMonitoringComponent extends Component {
+  // connectIdleMonitor will tack these props from your redux &apos;idle&apos; state
+  static propTypes =  { idleStatus: PropTypes.string.isRequired       // &apos;ACTIVE&apos; if user is active or one of your other configured idle states.
+                      , isIdle: PropTypes.bool.isRequired             // false if user is active or idle if user is in one of your idle states.
+                      , isPaused: PropTypes.bool.isRequired           // true if idle detection has been paused.
+                      , isDetectionRunning: PropTypes.bool.isRequired // true if redux idle middleware is currently monitoring user mouse / keyboard activity.
+                      , lastActive: PropTypes.number.isRequired       // the last time that the user was active (when detection is running).
+                      , lastEvent: PropTypes.object.isRequired        // the last mouse event coordinates that were triggered (when detection is running).
+                      };
+
+  render() {
+    const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent } = this.props
+    return (
+      &lt;div style={{ color: isIdle ? &apos;#f00&apos; : &apos;#0f0&apos; }}&gt;
+        {idleStatus}
+      &lt;/div&gt;
+    )
+  }
+}
+
+export default connectIdleMonitor(MyMonitoringComponent)</code>
+</code></pre>
 </div>
 </div>
 
