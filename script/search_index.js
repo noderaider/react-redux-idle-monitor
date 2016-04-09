@@ -1,5 +1,17 @@
 window.esdocSearchIndex = [
   [
+    "react-redux-idle-monitor~connectidlemonitor",
+    "variable/index.html#static-variable-connectIdleMonitor",
+    "<span>connectIdleMonitor</span> <span class=\"search-result-import-path\">react-redux-idle-monitor</span>",
+    "variable"
+  ],
+  [
+    "react-redux-idle-monitor~mapidlestatetoprops",
+    "variable/index.html#static-variable-mapIdleStateToProps",
+    "<span>mapIdleStateToProps</span> <span class=\"search-result-import-path\">react-redux-idle-monitor</span>",
+    "variable"
+  ],
+  [
     "builtinexternal/ecmascriptexternal.js~array",
     "external/index.html",
     "BuiltinExternal/ECMAScriptExternal.js~Array",
