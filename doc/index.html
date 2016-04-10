@@ -45,6 +45,10 @@
 <p>Works in tandem with <a href="https://npmjs.com/packages/redux-idle-monitor">redux-idle-monitor</a> to connect information about a users activity / idle state into your React components.</p>
 <p>This project also includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the &quot;showStatus&quot; prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user and additional information.</p>
 <h4 id="usage">Usage</h4>
+<p>There are a couple of ways to use react-redux-idle-monitor.</p>
+<hr>
+<h5 id="connectidlemonitor-property-injector">connectIdleMonitor Property Injector</h5>
+<p>The simplest way to get idle props to your component is to wrap the component with the <code>connectIdleMonitor</code> function export from <code>react-redux-idle-monitor</code>.  Wrapping with the <code>connectIdleMonitor</code> function will inject your component with the idle properties shown in the example below.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">import React, { Component, PropTypes } from &apos;react&apos;
 import { connectIdleMonitor } from &apos;react-redux-idle-monitor&apos;
 
@@ -69,6 +73,15 @@ class MyMonitoringComponent extends Component {
 }
 
 export default connectIdleMonitor(MyMonitoringComponent)</code>
+</code></pre>
+<hr>
+<h5 id="-idlemonitor-react-component"><code>IdleMonitor</code> React Component</h5>
+<p>Another option is to export the IdleMonitor react component as shown below. This monitor has an option to <code>showStatus</code> which will add a docked bar to the page with realtime information on the users idle status and is useful during development.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import IdleMonitor from &apos;react-redux-idle-monitor&apos;
+
+const MyComponent = props =&gt; (
+  &lt;IdleMonitor showStatus={true} /&gt;
+)</code>
 </code></pre>
 </div>
 </div>
