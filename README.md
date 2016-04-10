@@ -13,6 +13,17 @@ This project also includes an optional React IdleMonitor component that can be i
 #### Usage
 
 
+There are a couple of ways to use react-redux-idle-monitor.
+
+
+___
+
+
+##### connectIdleMonitor Property Injector
+
+
+The simplest way to get idle props to your component is to wrap the component with the `connectIdleMonitor` function export from `react-redux-idle-monitor`.  Wrapping with the `connectIdleMonitor` function will inject your component with the idle properties shown in the example below.
+
 ```js
 import React, { Component, PropTypes } from 'react'
 import { connectIdleMonitor } from 'react-redux-idle-monitor'
@@ -38,4 +49,20 @@ class MyMonitoringComponent extends Component {
 }
 
 export default connectIdleMonitor(MyMonitoringComponent)
+```
+
+___
+
+
+##### `IdleMonitor` React Component
+
+
+Another option is to export the IdleMonitor react component as shown below. This monitor has an option to `showStatus` which will add a docked bar to the page with realtime information on the users idle status and is useful during development.
+
+```js
+import IdleMonitor from 'react-redux-idle-monitor'
+
+const MyComponent = props => (
+  <IdleMonitor showStatus={true} />
+)
 ```
