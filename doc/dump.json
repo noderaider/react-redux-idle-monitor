@@ -10,7 +10,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import React, { Component, PropTypes } from 'react'\r\nimport { connect } from 'react-redux'\r\nimport { assert } from 'chai'\r\nimport { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'\r\nimport getStyle from './style'\r\n\r\n\r\nconst GenericIdleMonitor = props => {\r\n  const { panel, title, ulIdle, ulActive, li, activeStyle, idleStyle, trueStyle, falseStyle } = getStyle(props)\r\n  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props\r\n  const { x, y } = lastEvent\r\n  return (\r\n    <div style={panel}>\r\n      <ul style={isIdle ? ulIdle : ulActive}>\r\n        <li style={li}><h6 style={title}>idleMonitor</h6></li>\r\n        <li style={li}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>\r\n        <li style={li}>isIdle: {isIdle === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\r\n        <li style={li}>isPaused: {isPaused === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\r\n        <li style={li}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\r\n        <li style={li}>lastActive: {lastActive}</li>\r\n        <li style={li}>lastEvent: ({x}, {y})</li>\r\n      </ul>\r\n      <div>\r\n        <children {...props} />\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nclass IdleMonitor extends Component {\r\n  static propTypes =  { showStatus: PropTypes.bool.isRequired\r\n                      , idleStatus: PropTypes.string.isRequired\r\n                      , isIdle: PropTypes.bool.isRequired\r\n                      , isPaused: PropTypes.bool.isRequired\r\n                      , isDetectionRunning: PropTypes.bool.isRequired\r\n                      , lastActive: PropTypes.number.isRequired\r\n                      , lastEvent: PropTypes.object.isRequired\r\n                      };\r\n  static defaultProps = { showStatus: true\r\n                        , scheme: 'solarized'};\r\n  render() {\r\n    const { showStatus, children } = this.props\r\n    return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />\r\n  }\r\n}\r\n\r\nexport const mapIdleStateToProps = (state, ownProps) => {\r\n  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent } = bisectState(state)\r\n\r\n  return  { idleStatus\r\n          , isIdle\r\n          , isPaused\r\n          , isDetectionRunning\r\n          , lastActive\r\n          , lastEvent\r\n          }\r\n}\r\n\r\nconst bisectState = state => {\r\n  if(process.env.NODE_ENV !== 'production') {\r\n    assert.ok(state, 'state is required')\r\n    assert.ok(state[ROOT_STATE_KEY], `'${ROOT_STATE_KEY}' state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)\r\n  }\r\n  return state[ROOT_STATE_KEY]\r\n}\r\n\r\nexport const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)\r\n\r\nexport default connectIdleMonitor(IdleMonitor)\r\n"
+    "content": "import React, { Component, PropTypes } from 'react'\r\nimport { connect } from 'react-redux'\r\nimport { assert } from 'chai'\r\nimport { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'\r\nimport getStyle from './style'\r\n\r\n\r\nconst GenericIdleMonitor = props => {\r\n  const { panel, title, ulIdle, ulActive, li, activeStyle, idleStyle, trueStyle, falseStyle } = getStyle(props)\r\n  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props\r\n  const { x, y } = lastEvent\r\n  return (\r\n    <div style={panel}>\r\n      <ul style={isIdle ? ulIdle : ulActive}>\r\n        <li style={li}><h6 style={title}>idleMonitor</h6></li>\r\n        <li style={li}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>\r\n        <li style={li}>isIdle: {isIdle === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\r\n        <li style={li}>isPaused: {isPaused === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\r\n        <li style={li}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>\r\n        <li style={li}>lastActive: {lastActive}</li>\r\n        <li style={li}>lastEvent: ({x}, {y})</li>\r\n      </ul>\r\n      <div>\r\n        <children {...props} />\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nclass IdleMonitor extends Component {\r\n  static propTypes =  { showStatus: PropTypes.bool.isRequired\r\n                      , showControls: PropTypes.bool.isRequired\r\n                      , idleStatus: PropTypes.string.isRequired\r\n                      , isIdle: PropTypes.bool.isRequired\r\n                      , isPaused: PropTypes.bool.isRequired\r\n                      , isDetectionRunning: PropTypes.bool.isRequired\r\n                      , lastActive: PropTypes.number.isRequired\r\n                      , lastEvent: PropTypes.object.isRequired\r\n                      };\r\n  static defaultProps = { showStatus: true\r\n                        , showControls: true\r\n                        , scheme: 'solarized'\r\n                        };\r\n  render() {\r\n    const { showStatus, children } = this.props\r\n    return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />\r\n  }\r\n}\r\n\r\nexport const mapIdleStateToProps = (state, ownProps) => {\r\n  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent } = bisectState(state)\r\n\r\n  return  { idleStatus\r\n          , isIdle\r\n          , isPaused\r\n          , isDetectionRunning\r\n          , lastActive\r\n          , lastEvent\r\n          }\r\n}\r\n\r\nconst bisectState = state => {\r\n  if(process.env.NODE_ENV !== 'production') {\r\n    assert.ok(state, 'state is required')\r\n    assert.ok(state[ROOT_STATE_KEY], `'${ROOT_STATE_KEY}' state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)\r\n  }\r\n  return state[ROOT_STATE_KEY]\r\n}\r\n\r\nexport const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)\r\n\r\nexport default connectIdleMonitor(IdleMonitor)\r\n"
   },
   {
     "__docId__": 1,
@@ -63,7 +63,7 @@
     "longname": "lib/index.js~IdleMonitor#render",
     "access": null,
     "description": null,
-    "lineNumber": 41,
+    "lineNumber": 44,
     "undocument": true,
     "params": [],
     "return": {
@@ -86,7 +86,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": "{mapIdleStateToProps}",
     "description": null,
-    "lineNumber": 47,
+    "lineNumber": 50,
     "undocument": true,
     "type": {
       "types": [
@@ -107,7 +107,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 59,
+    "lineNumber": 62,
     "undocument": true,
     "type": {
       "types": [
@@ -128,7 +128,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": "{connectIdleMonitor}",
     "description": null,
-    "lineNumber": 67,
+    "lineNumber": 70,
     "undocument": true,
     "type": {
       "types": [
