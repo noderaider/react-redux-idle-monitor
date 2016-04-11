@@ -29,6 +29,7 @@ const GenericIdleMonitor = props => {
 
 class IdleMonitor extends Component {
   static propTypes =  { showStatus: PropTypes.bool.isRequired
+                      , showControls: PropTypes.bool.isRequired
                       , idleStatus: PropTypes.string.isRequired
                       , isIdle: PropTypes.bool.isRequired
                       , isPaused: PropTypes.bool.isRequired
@@ -37,7 +38,9 @@ class IdleMonitor extends Component {
                       , lastEvent: PropTypes.object.isRequired
                       };
   static defaultProps = { showStatus: true
-                        , scheme: 'solarized'};
+                        , showControls: true
+                        , scheme: 'solarized'
+                        };
   render() {
     const { showStatus, children } = this.props
     return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />

@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "redux-addons": "*",
-    "redux-idle-monitor": "*",
+    "redux-idle-monitor": "^0.1.19",
     "redux-mux": "*"
   },
   "devDependencies": {
