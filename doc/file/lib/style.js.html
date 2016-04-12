@@ -40,68 +40,91 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">lib/style.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">export default function getStyle(props) {
-  const badge =  { }
-  const title = { display: &apos;inline&apos; }
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as themes from &apos;redux-devtools-themes&apos;
 
-  const panel =  { /*fontSize: &apos;0.75em&apos;
-                      , maxWidth: 720
-                      , maxHeight: 70
-                      , paddingTop: 5
-                      , paddingLeft: 5
-                      , paddingBottom: 5
-                      , paddingRight: 5
-                      , marginLeft: &apos;auto&apos;
-                      , marginRight: &apos;auto&apos;
-                      , textAlign: &apos;center&apos;
-                      */
-                      }
-  const ul = { fontSize: &apos;0.75em&apos;
-                  , textAlign: &apos;center&apos;
-                  , listStyle: &apos;none&apos;
-                  //, maxWidth: 720
-                  , width: &apos;40%&apos;
-                  , bottom: 0
-                  , left: &apos;30%&apos;
-                  , padding: 5
-                  , marginLeft: &apos;auto&apos;
-                  , marginRight: &apos;auto&apos;
-                  , marginBottom: 0
-                  , border: &apos;1px solid rgb(120, 120, 120)&apos;
-                  , borderBottom: 0
-                  , borderTopLeftRadius: 3
-                  , borderTopRightRadius: 3
-                  , position: &apos;fixed&apos;
-                  , zIndex: 99999999
-                  , opacity: 0.9
-                  }
-  const ulActive =  { ...ul
-                    , backgroundColor: &apos;rgb(230, 240, 230)&apos;
-                    }
-  const ulIdle =  { ...ul
-                    , backgroundColor: &apos;rgb(240, 230, 230)&apos;
-                    }
+export default function getStyle(props) {
+  const { theme, invertTheme, paletteMap, opacity, isRunning, isDetectionRunning, isIdle, style } = props
+  const palette = palettize(paletteMap)(theme)(invertTheme)
+
+  const panel = { position: &apos;fixed&apos;
+                , zIndex: 9999999
+                , width: &apos;100%&apos;
+                , bottom: 0
+                }
+  const inner = { display: &apos;flex&apos;
+                , padding: 0
+                , margin: 0
+                }
+
+  const title = { color: palette.accent[0]
+                , backgroundColor: palette.background[1]
+                , lineHeight:2
+                , paddingLeft: 4
+                , paddingRight: 6
+                , fontWeight: &apos;bold&apos;
+                }
+
+  const ul =  { fontSize: 10
+              , display: &apos;flex&apos;
+              , alignItems: &apos;stretch&apos;
+              , padding: 0
+              , marginBottom: 0
+              , marginLeft: &apos;auto&apos;
+              , marginRight: &apos;auto&apos;
+              , listStyle: &apos;none&apos;
+              , border: `1px solid ${palette.content[0]}`
+              , borderTopLeftRadius: 3
+              , borderTopRightRadius: 3
+              , opacity
+              , backgroundColor: palette.background[0]
+              , color: palette.content[0]
+              }
   const li = { display: &apos;inline&apos;
-                  , marginLeft:4
-                  , marginRight:4
-                  }
+             , marginLeft: 5
+             , marginRight:5
+             , lineHeight: 2
+             , fontWeight: &apos;bold&apos;
+             }
 
-
-  const activeStyle = { ...badge
-                      , color: &apos;rgb(20, 200, 50)&apos;
-                      }
-  const idleStyle = { ...badge
-                    , color: &apos;rgb(230, 100, 100)&apos;
-                    }
-  const trueStyle = { ...badge
-                    , color: &apos;rgb(50, 200, 200)&apos;
-                    }
-  const falseStyle =  { ...badge
-                      , color: &apos;rgb(200, 50, 50)&apos;
-                      }
-
-  return { badge, title, panel, ul, ulActive, ulIdle, li, activeStyle, idleStyle, trueStyle, falseStyle }
+  const eventStyle = { ...li, fontSize: 8 }
+  return  { title
+          , panel
+          , inner
+          , ul
+          , li
+          , activeStyle: { color: palette.bool(true) } //activeColor }
+          , infoStyle: { color: palette.accent[2] }
+          , idleStyle: { color: palette.accent[1] }
+          , stopStyle: { color: palette.bool(false) }
+          , eventStyle
+          }
 }
+
+
+
+
+//** TODO: NPM MODULE */
+const palettize = paletteMap =&gt; theme =&gt; invertTheme =&gt; {
+  const scheme = invertTheme ? invertColors(themes[theme]) : themes[theme]
+  const basePalette = Object.keys(paletteMap).reduce((palette, key) =&gt; {
+    palette[key] = paletteMap[key].map(x =&gt; scheme[x])
+    return palette
+  }, {})
+  return  {...basePalette
+          , bool: condition =&gt; condition ? scheme[&apos;base0B&apos;] : scheme[&apos;base08&apos;]
+          }
+}
+
+const invertColors = theme =&gt; ( { ...theme
+                                , base00: theme.base07
+                                , base01: theme.base06
+                                , base02: theme.base05
+                                , base03: theme.base04
+                                , base04: theme.base03
+                                , base05: theme.base02
+                                , base06: theme.base01
+                                , base07: theme.base00
+                                } )
 </code></pre>
 
 </div>
