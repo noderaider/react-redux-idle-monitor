@@ -16,10 +16,10 @@ const GenericIdleMonitor = props => {
         <li style={li}><h6 style={title}>idleMonitor</h6></li>
         <li style={li}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>
         <li style={li}>{isIdle === true ? <span style={trueStyle}>Idle</span> : <span style={falseStyle}>Not Idle</span>}</li>
-        <li style={li}>isPaused: {isPaused === true ? <span style={trueStyle}>Paused</span> : <span style={falseStyle}>Not Paused</span>}</li>
-        <li style={li}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>Detecting</span> : <span style={falseStyle}>Not Detecting</span>}</li>
-        <li style={li}>lastActive: {lastDate.getHours()}:{lastDate.getMinutes()}:{lastDate.getSeconds()}</li>
-        <li style={li}>lastEvent: {type} ({x}, {y})</li>
+        <li style={li}>{isPaused === true ? <span style={trueStyle}>Paused</span> : <span style={falseStyle}>Not Paused</span>}</li>
+        <li style={li}>{isDetectionRunning === true ? <span style={trueStyle}>Detecting</span> : <span style={falseStyle}>Not Detecting</span>}</li>
+        <li style={li}>last active @ {lastDate.getHours()}:{lastDate.getMinutes()}:{lastDate.getSeconds()}</li>
+        <li style={li}>{type} ({x}, {y})</li>
       </ul>
       <div>
         <children {...props} />

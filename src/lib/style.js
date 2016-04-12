@@ -18,9 +18,9 @@ export default function getStyle(props) {
                   , textAlign: 'center'
                   , listStyle: 'none'
                   //, maxWidth: 720
-                  , width: '50%'
+                  , width: '40%'
                   , bottom: 0
-                  , left: '25%'
+                  , left: '30%'
                   , padding: 5
                   , marginLeft: 'auto'
                   , marginRight: 'auto'
