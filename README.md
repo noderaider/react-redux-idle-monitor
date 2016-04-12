@@ -6,8 +6,22 @@ React Redux higher order component for idle state monitoring.
 
 Works in tandem with [redux-idle-monitor](https://npmjs.com/packages/redux-idle-monitor) to connect information about a users activity / idle state into your React components.
 
-This project also includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the "showStatus" prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user and additional information.
 
+This project includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the "showStatus" prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user and additional information.
+
+User is active looks like:
+
+![active idle status](/src/public/assets/active.png)
+
+
+After a while of inactivity we get:
+
+![inactive idle status](/src/public/assets/inactive.png)
+
+
+Eventually the user is expired:
+
+![expired idle status](/src/public/assets/expired.png)
 
 
 #### Usage
