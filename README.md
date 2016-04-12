@@ -33,7 +33,7 @@ There are a couple of ways to use react-redux-idle-monitor.
 ___
 
 
-##### connectIdleMonitor Property Injector
+### connectIdleMonitor Property Injector
 
 
 The simplest way to get idle props to your component is to wrap the component with the `connectIdleMonitor` function export from `react-redux-idle-monitor`.  Wrapping with the `connectIdleMonitor` function will inject your component with the idle properties shown in the example below.
@@ -68,7 +68,7 @@ export default connectIdleMonitor(MyMonitoringComponent)
 ___
 
 
-##### `IdleMonitor` React Component
+### `IdleMonitor` React Component
 
 
 Another option is to export the IdleMonitor react component as shown below. This monitor has an option to `showStatus` which will add a docked bar to the page with realtime information on the users idle status and is useful during development.
@@ -80,3 +80,18 @@ const MyComponent = props => (
   <IdleMonitor showStatus={true} />
 )
 ```
+
+
+#### IdleMonitor props
+
+These props can be passed to the IdleMonitor React component to control the look and feel.
+
+Name            | Description
+-------------   | -------------
+`showStatus`    | By default, set to `true`.
+`showControls`  | By default, set to `false`
+`title`         | By default, set to `IDLEMONITOR`
+`theme`         | By default, set to `solarized`
+`invertTheme`   | By default, set to `false` (dark is the standard)
+`opacity`       | By default, set to `1`
+`paletteMap`    | Maps theme base16 colors to control. By default, set to `{ background: ['base00', 'base01'], content: ['base04', 'base02', 'base05'], accent: ['base0D', 'base0E', 'base0C'] }`
