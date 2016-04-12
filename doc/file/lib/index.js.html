@@ -50,17 +50,18 @@ import getStyle from &apos;./style&apos;
 const GenericIdleMonitor = props =&gt; {
   const { panel, title, ulIdle, ulActive, li, activeStyle, idleStyle, trueStyle, falseStyle } = getStyle(props)
   const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props
-  const { x, y } = lastEvent
+  const { type, x, y } = lastEvent
+  const lastDate = new Date(lastActive)
   return (
     &lt;div style={panel}&gt;
       &lt;ul style={isIdle ? ulIdle : ulActive}&gt;
         &lt;li style={li}&gt;&lt;h6 style={title}&gt;idleMonitor&lt;/h6&gt;&lt;/li&gt;
         &lt;li style={li}&gt;idleStatus &lt;span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}&gt;[{idleStatus}]&lt;/span&gt;&lt;/li&gt;
-        &lt;li style={li}&gt;isIdle: {isIdle === true ? &lt;span style={trueStyle}&gt;[true]&lt;/span&gt; : &lt;span style={falseStyle}&gt;[false]&lt;/span&gt;}&lt;/li&gt;
-        &lt;li style={li}&gt;isPaused: {isPaused === true ? &lt;span style={trueStyle}&gt;[true]&lt;/span&gt; : &lt;span style={falseStyle}&gt;[false]&lt;/span&gt;}&lt;/li&gt;
-        &lt;li style={li}&gt;isDetectionRunning: {isDetectionRunning === true ? &lt;span style={trueStyle}&gt;[true]&lt;/span&gt; : &lt;span style={falseStyle}&gt;[false]&lt;/span&gt;}&lt;/li&gt;
-        &lt;li style={li}&gt;lastActive: {lastActive}&lt;/li&gt;
-        &lt;li style={li}&gt;lastEvent: ({x}, {y})&lt;/li&gt;
+        &lt;li style={li}&gt;{isIdle === true ? &lt;span style={trueStyle}&gt;Idle&lt;/span&gt; : &lt;span style={falseStyle}&gt;Not Idle&lt;/span&gt;}&lt;/li&gt;
+        &lt;li style={li}&gt;isPaused: {isPaused === true ? &lt;span style={trueStyle}&gt;Paused&lt;/span&gt; : &lt;span style={falseStyle}&gt;Not Paused&lt;/span&gt;}&lt;/li&gt;
+        &lt;li style={li}&gt;isDetectionRunning: {isDetectionRunning === true ? &lt;span style={trueStyle}&gt;Detecting&lt;/span&gt; : &lt;span style={falseStyle}&gt;Not Detecting&lt;/span&gt;}&lt;/li&gt;
+        &lt;li style={li}&gt;lastActive: {lastDate.getHours()}:{lastDate.getMinutes()}:{lastDate.getSeconds()}&lt;/li&gt;
+        &lt;li style={li}&gt;lastEvent: {type} ({x}, {y})&lt;/li&gt;
       &lt;/ul&gt;
       &lt;div&gt;
         &lt;children {...props} /&gt;
