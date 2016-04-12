@@ -679,9 +679,9 @@
                               "column": 32
                             }
                           },
-                          "value": "50%",
-                          "rawValue": "50%",
-                          "raw": "'50%'"
+                          "value": "40%",
+                          "rawValue": "40%",
+                          "raw": "'40%'"
                         },
                         "kind": "init",
                         "leadingComments": [
@@ -807,9 +807,9 @@
                               "column": 31
                             }
                           },
-                          "value": "25%",
-                          "rawValue": "25%",
-                          "raw": "'25%'"
+                          "value": "30%",
+                          "rawValue": "30%",
+                          "raw": "'30%'"
                         },
                         "kind": "init"
                       },
