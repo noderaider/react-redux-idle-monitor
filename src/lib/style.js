@@ -1,62 +1,85 @@
+import * as themes from 'redux-devtools-themes'
+
 export default function getStyle(props) {
-  const badge =  { }
-  const title = { display: 'inline' }
+  const { theme, invertTheme, paletteMap, opacity, isRunning, isDetectionRunning, isIdle, style } = props
+  const palette = palettize(paletteMap)(theme)(invertTheme)
 
-  const panel =  { /*fontSize: '0.75em'
-                      , maxWidth: 720
-                      , maxHeight: 70
-                      , paddingTop: 5
-                      , paddingLeft: 5
-                      , paddingBottom: 5
-                      , paddingRight: 5
-                      , marginLeft: 'auto'
-                      , marginRight: 'auto'
-                      , textAlign: 'center'
-                      */
-                      }
-  const ul = { fontSize: '0.75em'
-                  , textAlign: 'center'
-                  , listStyle: 'none'
-                  //, maxWidth: 720
-                  , width: '40%'
-                  , bottom: 0
-                  , left: '30%'
-                  , padding: 5
-                  , marginLeft: 'auto'
-                  , marginRight: 'auto'
-                  , marginBottom: 0
-                  , border: '1px solid rgb(120, 120, 120)'
-                  , borderBottom: 0
-                  , borderTopLeftRadius: 3
-                  , borderTopRightRadius: 3
-                  , position: 'fixed'
-                  , zIndex: 99999999
-                  , opacity: 0.9
-                  }
-  const ulActive =  { ...ul
-                    , backgroundColor: 'rgb(230, 240, 230)'
-                    }
-  const ulIdle =  { ...ul
-                    , backgroundColor: 'rgb(240, 230, 230)'
-                    }
+  const panel = { position: 'fixed'
+                , zIndex: 9999999
+                , width: '100%'
+                , bottom: 0
+                }
+  const inner = { display: 'flex'
+                , padding: 0
+                , margin: 0
+                }
+
+  const title = { color: palette.accent[0]
+                , backgroundColor: palette.background[1]
+                , lineHeight:2
+                , paddingLeft: 4
+                , paddingRight: 6
+                , fontWeight: 'bold'
+                }
+
+  const ul =  { fontSize: 10
+              , display: 'flex'
+              , alignItems: 'stretch'
+              , padding: 0
+              , marginBottom: 0
+              , marginLeft: 'auto'
+              , marginRight: 'auto'
+              , listStyle: 'none'
+              , border: `1px solid ${palette.content[0]}`
+              , borderTopLeftRadius: 3
+              , borderTopRightRadius: 3
+              , opacity
+              , backgroundColor: palette.background[0]
+              , color: palette.content[0]
+              }
   const li = { display: 'inline'
-                  , marginLeft:4
-                  , marginRight:4
-                  }
+             , marginLeft: 5
+             , marginRight:5
+             , lineHeight: 2
+             , fontWeight: 'bold'
+             }
 
-
-  const activeStyle = { ...badge
-                      , color: 'rgb(20, 200, 50)'
-                      }
-  const idleStyle = { ...badge
-                    , color: 'rgb(230, 100, 100)'
-                    }
-  const trueStyle = { ...badge
-                    , color: 'rgb(50, 200, 200)'
-                    }
-  const falseStyle =  { ...badge
-                      , color: 'rgb(200, 50, 50)'
-                      }
-
-  return { badge, title, panel, ul, ulActive, ulIdle, li, activeStyle, idleStyle, trueStyle, falseStyle }
+  const eventStyle = { ...li, fontSize: 8 }
+  return  { title
+          , panel
+          , inner
+          , ul
+          , li
+          , activeStyle: { color: palette.bool(true) } //activeColor }
+          , infoStyle: { color: palette.accent[2] }
+          , idleStyle: { color: palette.accent[1] }
+          , stopStyle: { color: palette.bool(false) }
+          , eventStyle
+          }
 }
+
+
+
+
+//** TODO: NPM MODULE */
+const palettize = paletteMap => theme => invertTheme => {
+  const scheme = invertTheme ? invertColors(themes[theme]) : themes[theme]
+  const basePalette = Object.keys(paletteMap).reduce((palette, key) => {
+    palette[key] = paletteMap[key].map(x => scheme[x])
+    return palette
+  }, {})
+  return  {...basePalette
+          , bool: condition => condition ? scheme['base0B'] : scheme['base08']
+          }
+}
+
+const invertColors = theme => ( { ...theme
+                                , base00: theme.base07
+                                , base01: theme.base06
+                                , base02: theme.base05
+                                , base03: theme.base04
+                                , base04: theme.base03
+                                , base05: theme.base02
+                                , base06: theme.base01
+                                , base07: theme.base00
+                                } )

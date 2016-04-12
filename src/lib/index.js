@@ -6,41 +6,61 @@ import getStyle from './style'
 
 
 const GenericIdleMonitor = props => {
-  const { panel, title, ulIdle, ulActive, li, activeStyle, idleStyle, trueStyle, falseStyle } = getStyle(props)
-  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props
+  const { panel, inner, title, ul, li, activeStyle, infoStyle, idleStyle, stopStyle, eventStyle } = getStyle(props)
+  const { showControls, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children } = props
   const { type, x, y } = lastEvent
   const lastDate = new Date(lastActive)
   return (
-    <div style={panel}>
-      <ul style={isIdle ? ulIdle : ulActive}>
-        <li style={li}><h6 style={title}>idleMonitor</h6></li>
-        <li style={li}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>
-        <li style={li}>{isIdle === true ? <span style={trueStyle}>Idle</span> : <span style={falseStyle}>Not Idle</span>}</li>
-        <li style={li}>{isPaused === true ? <span style={trueStyle}>Paused</span> : <span style={falseStyle}>Not Paused</span>}</li>
-        <li style={li}>{isDetectionRunning === true ? <span style={trueStyle}>Detecting</span> : <span style={falseStyle}>Not Detecting</span>}</li>
-        <li style={li}>last active @ {lastDate.getHours()}:{lastDate.getMinutes()}:{lastDate.getSeconds()}</li>
-        <li style={li}>{type} ({x}, {y})</li>
-      </ul>
-      <div>
-        <children {...props} />
+    <div>
+      <children {...props} />
+      <div style={panel}>
+        <div style={inner}>
+          <ul style={ul}>
+            <li style={title}>{props.title}</li>
+            <li style={li}>{isRunning === true ? <span style={activeStyle}>ON</span> : <span style={stopStyle}>OFF</span>}</li>
+            {isRunning === true ? <li style={li}><span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>{idleStatus}</span></li> : null}
+            {isRunning === true ? <li style={li}>{isDetectionRunning ? <span style={infoStyle}>DETECTING</span> : <span style={idleStyle}>SLEEPING</span>}</li> : null}
+            {isIdle === true ? <li style={li}><span style={idleStyle}>IDLE</span></li> : null}
+            <li style={li}>{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x >= 0 && y >= 0 ? ` (${x}, ${y})` : null}</li>
+          </ul>
+        </div>
       </div>
     </div>
   )
 }
 
+const monitorStyleShape =  PropTypes.shape( { backgroundColor: PropTypes.string.isRequired
+                                            , color: PropTypes.string.isRequired
+                                            , activeColor: PropTypes.string.isRequired
+                                            , idleColor: PropTypes.string.isRequired
+                                            , stopColor: PropTypes.string.isRequired
+                                            })
+
 class IdleMonitor extends Component {
   static propTypes =  { showStatus: PropTypes.bool.isRequired
                       , showControls: PropTypes.bool.isRequired
+                      , title: PropTypes.string.isRequired
+                      , theme: PropTypes.string.isRequired
+                      , invertTheme: PropTypes.bool.isRequired
+                      , opacity: PropTypes.number.isRequired
+                      , paletteMap: PropTypes.object.isRequired
                       , idleStatus: PropTypes.string.isRequired
+                      , isRunning: PropTypes.bool.isRequired
                       , isIdle: PropTypes.bool.isRequired
-                      , isPaused: PropTypes.bool.isRequired
                       , isDetectionRunning: PropTypes.bool.isRequired
                       , lastActive: PropTypes.number.isRequired
                       , lastEvent: PropTypes.object.isRequired
                       };
   static defaultProps = { showStatus: true
                         , showControls: true
-                        , scheme: 'solarized'
+                        , title: 'IDLEMONITOR'
+                        , theme: 'solarized'
+                        , invertTheme: false
+                        , opacity: 1
+                        , paletteMap: { background: ['base00', 'base01']
+                                      , content: ['base04', 'base02', 'base05']
+                                      , accent: ['base0D', 'base0E', 'base0C']
+                                      }
                         };
   render() {
     const { showStatus, children } = this.props
@@ -49,12 +69,12 @@ class IdleMonitor extends Component {
 }
 
 export const mapIdleStateToProps = (state, ownProps) => {
-  const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent } = bisectState(state)
+  const { idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent } = bisectState(state)
 
   return  { idleStatus
-          , isIdle
-          , isPaused
+          , isRunning
           , isDetectionRunning
+          , isIdle
           , lastActive
           , lastEvent
           }
