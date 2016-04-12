@@ -8,17 +8,18 @@ import getStyle from './style'
 const GenericIdleMonitor = props => {
   const { panel, title, ulIdle, ulActive, li, activeStyle, idleStyle, trueStyle, falseStyle } = getStyle(props)
   const { idleStatus, isIdle, isPaused, isDetectionRunning, lastActive, lastEvent, children } = props
-  const { x, y } = lastEvent
+  const { type, x, y } = lastEvent
+  const lastDate = new Date(lastActive)
   return (
     <div style={panel}>
       <ul style={isIdle ? ulIdle : ulActive}>
         <li style={li}><h6 style={title}>idleMonitor</h6></li>
         <li style={li}>idleStatus <span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>[{idleStatus}]</span></li>
-        <li style={li}>isIdle: {isIdle === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
-        <li style={li}>isPaused: {isPaused === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
-        <li style={li}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>[true]</span> : <span style={falseStyle}>[false]</span>}</li>
-        <li style={li}>lastActive: {lastActive}</li>
-        <li style={li}>lastEvent: ({x}, {y})</li>
+        <li style={li}>{isIdle === true ? <span style={trueStyle}>Idle</span> : <span style={falseStyle}>Not Idle</span>}</li>
+        <li style={li}>isPaused: {isPaused === true ? <span style={trueStyle}>Paused</span> : <span style={falseStyle}>Not Paused</span>}</li>
+        <li style={li}>isDetectionRunning: {isDetectionRunning === true ? <span style={trueStyle}>Detecting</span> : <span style={falseStyle}>Not Detecting</span>}</li>
+        <li style={li}>lastActive: {lastDate.getHours()}:{lastDate.getMinutes()}:{lastDate.getSeconds()}</li>
+        <li style={li}>lastEvent: {type} ({x}, {y})</li>
       </ul>
       <div>
         <children {...props} />
