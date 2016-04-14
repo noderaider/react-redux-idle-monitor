@@ -43,16 +43,10 @@
 <p>React Redux higher order component for idle state monitoring.</p>
 <p><code>npm i -S react-redux-idle-monitor</code></p>
 <p>Works in tandem with <a href="https://npmjs.com/packages/redux-idle-monitor">redux-idle-monitor</a> to connect information about a users activity / idle state into your React components.</p>
-<p>This project includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the &quot;showStatus&quot; prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user and additional information.</p>
-<p>User is active looks like:</p>
-<p><img src="/src/public/assets/active.png" alt="active idle status"></p>
-<p>After a while of inactivity we get:</p>
-<p><img src="/src/public/assets/inactive.png" alt="inactive idle status"></p>
-<p>Eventually the user is expired:</p>
-<p><img src="/src/public/assets/expired.png" alt="expired idle status"></p>
+<p>This project includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the &quot;showStatus&quot; prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user, last event that triggered activity, and additional information.</p>
+<p><img src="/src/public/assets/idle-monitor.gif" alt="idle monitor"></p>
 <h4 id="usage">Usage</h4>
 <p>There are a couple of ways to use react-redux-idle-monitor.</p>
-<hr>
 <h3 id="connectidlemonitor-property-injector">connectIdleMonitor Property Injector</h3>
 <p>The simplest way to get idle props to your component is to wrap the component with the <code>connectIdleMonitor</code> function export from <code>react-redux-idle-monitor</code>.  Wrapping with the <code>connectIdleMonitor</code> function will inject your component with the idle properties shown in the example below.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">import React, { Component, PropTypes } from &apos;react&apos;
