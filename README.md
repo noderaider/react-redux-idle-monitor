@@ -1,8 +1,6 @@
 # [react-redux-idle-monitor](https://npmjs.com/packages/react-redux-idle-monitor)
 
-[![NPM](https://nodei.co/npm/react-redux-idle-monitor.png?stars=true&downloadRank=true)](https://nodei.co/npm/react-redux-idle-monitor/)
-
-[![NPM](https://nodei.co/npm-dl/react-redux-idle-monitor.png?months=1)](https://nodei.co/npm/react-redux-idle-monitor/)
+[![NPM](https://nodei.co/npm/react-redux-idle-monitor.png?stars=true&downloads=true)](https://nodei.co/npm/react-redux-idle-monitor/)
 
 React Redux higher order component for idle state monitoring.
 
