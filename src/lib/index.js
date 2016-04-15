@@ -12,7 +12,7 @@ const GenericIdleMonitor = props => {
   const lastDate = new Date(lastActive)
   return (
     <div>
-      <children {...props} />
+      {/*<children />*/}
       <div style={panel}>
         <div style={inner}>
           <ul style={ul}>
