@@ -8,13 +8,10 @@ export default function getStyle(props) {
                 , zIndex: 9999999
                 , width: '100%'
                 , bottom: 0
-                , background: 'none'
-                , opacity: 0
                 }
   const inner = { display: 'flex'
                 , padding: 0
                 , margin: 0
-                , background: 'none'
                 }
 
   const title = { color: palette.accent[0]
