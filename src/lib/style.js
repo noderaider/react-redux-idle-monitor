@@ -1,13 +1,16 @@
 import * as themes from 'redux-devtools-themes'
 
+const noop = () => {}
+
 export default function getStyle(props) {
-  const { theme, invertTheme, paletteMap, opacity, isRunning, isDetectionRunning, isIdle, style } = props
+  const { theme, invertTheme, paletteMap, dockTo, opacity, isRunning, isDetectionRunning, isIdle, style } = props
   const palette = palettize(paletteMap)(theme)(invertTheme)
 
   const panel = { position: 'fixed'
                 , zIndex: 9999999
                 , width: '100%'
-                , bottom: 0
+                , [dockTo]: 0
+                , pointerEvents: 'none'
                 }
   const inner = { display: 'flex'
                 , padding: 0
@@ -26,13 +29,15 @@ export default function getStyle(props) {
               , display: 'flex'
               , alignItems: 'stretch'
               , padding: 0
+              , marginTop: 0
               , marginBottom: 0
               , marginLeft: 'auto'
               , marginRight: 'auto'
               , listStyle: 'none'
               , border: `1px solid ${palette.content[0]}`
-              , borderTopLeftRadius: 3
-              , borderTopRightRadius: 3
+              , [`border${dockTo === 'top' ? 'Top' : 'Bottom'}`] : 0
+              , [`border${dockTo === 'top' ? 'Bottom' : 'Top'}LeftRadius`]: 3
+              , [`border${dockTo === 'top' ? 'Bottom' : 'Top'}RightRadius`]: 3
               , opacity
               , backgroundColor: palette.background[0]
               , color: palette.content[0]

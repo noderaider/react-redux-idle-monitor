@@ -82,5 +82,6 @@ Name            | Description
 `title`         | By default, set to `IDLEMONITOR`
 `theme`         | By default, set to `solarized`
 `invertTheme`   | By default, set to `false` (dark is the standard)
+`dockTo`        | By default, set to 'bottom'. Supports 'top' and 'bottom'.
 `opacity`       | By default, set to `1`
 `paletteMap`    | Maps theme base16 colors to control. By default, set to `{ background: ['base00', 'base01'], content: ['base04', 'base02', 'base05'], accent: ['base0D', 'base0E', 'base0C'] }`
