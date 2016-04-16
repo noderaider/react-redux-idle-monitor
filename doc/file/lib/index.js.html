@@ -84,6 +84,7 @@ class IdleMonitor extends Component {
                       , title: PropTypes.string.isRequired
                       , theme: PropTypes.string.isRequired
                       , invertTheme: PropTypes.bool.isRequired
+                      , dockTo: PropTypes.oneOf([&apos;top&apos;, &apos;bottom&apos;])
                       , opacity: PropTypes.number.isRequired
                       , paletteMap: PropTypes.object.isRequired
                       , idleStatus: PropTypes.string.isRequired
@@ -99,6 +100,7 @@ class IdleMonitor extends Component {
                         , theme: &apos;solarized&apos;
                         , invertTheme: false
                         , opacity: 1
+                        , dockTo: &apos;bottom&apos;
                         , paletteMap: { background: [&apos;base00&apos;, &apos;base01&apos;]
                                       , content: [&apos;base04&apos;, &apos;base02&apos;, &apos;base05&apos;]
                                       , accent: [&apos;base0D&apos;, &apos;base0E&apos;, &apos;base0C&apos;]

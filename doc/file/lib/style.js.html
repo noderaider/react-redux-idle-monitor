@@ -42,14 +42,17 @@
 <div class="content" data-ice="content"><h1 data-ice="title">lib/style.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as themes from &apos;redux-devtools-themes&apos;
 
+const noop = () =&gt; {}
+
 export default function getStyle(props) {
-  const { theme, invertTheme, paletteMap, opacity, isRunning, isDetectionRunning, isIdle, style } = props
+  const { theme, invertTheme, paletteMap, dockTo, opacity, isRunning, isDetectionRunning, isIdle, style } = props
   const palette = palettize(paletteMap)(theme)(invertTheme)
 
   const panel = { position: &apos;fixed&apos;
                 , zIndex: 9999999
                 , width: &apos;100%&apos;
-                , bottom: 0
+                , [dockTo]: 0
+                , pointerEvents: &apos;none&apos;
                 }
   const inner = { display: &apos;flex&apos;
                 , padding: 0
@@ -68,13 +71,15 @@ export default function getStyle(props) {
               , display: &apos;flex&apos;
               , alignItems: &apos;stretch&apos;
               , padding: 0
+              , marginTop: 0
               , marginBottom: 0
               , marginLeft: &apos;auto&apos;
               , marginRight: &apos;auto&apos;
               , listStyle: &apos;none&apos;
               , border: `1px solid ${palette.content[0]}`
-              , borderTopLeftRadius: 3
-              , borderTopRightRadius: 3
+              , [`border${dockTo === &apos;top&apos; ? &apos;Top&apos; : &apos;Bottom&apos;}`] : 0
+              , [`border${dockTo === &apos;top&apos; ? &apos;Bottom&apos; : &apos;Top&apos;}LeftRadius`]: 3
+              , [`border${dockTo === &apos;top&apos; ? &apos;Bottom&apos; : &apos;Top&apos;}RightRadius`]: 3
               , opacity
               , backgroundColor: palette.background[0]
               , color: palette.content[0]
