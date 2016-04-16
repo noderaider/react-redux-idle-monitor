@@ -7,15 +7,15 @@
       "expectCount": 2,
       "actualCount": 0,
       "undocumentLines": [
-        91,
-        71
+        93,
+        73
       ]
     },
     "lib/style.js": {
       "expectCount": 1,
       "actualCount": 0,
       "undocumentLines": [
-        3
+        5
       ]
     }
   }
