@@ -10,7 +10,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "import React, { Component, PropTypes } from 'react'\r\nimport { connect } from 'react-redux'\r\nimport { assert } from 'chai'\r\nimport { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'\r\nimport getStyle from './style'\r\n\r\n\r\nconst GenericIdleMonitor = props => {\r\n  const { panel, inner, title, ul, li, activeStyle, infoStyle, idleStyle, stopStyle, eventStyle } = getStyle(props)\r\n  const { showControls, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children } = props\r\n  const { type, x, y } = lastEvent\r\n  const lastDate = new Date(lastActive)\r\n  return (\r\n    <div>\r\n      {/*<children />*/}\r\n      <div style={panel}>\r\n        <div style={inner}>\r\n          <ul style={ul}>\r\n            <li style={title}>{props.title}</li>\r\n            <li style={li}>{isRunning === true ? <span style={activeStyle}>ON</span> : <span style={stopStyle}>OFF</span>}</li>\r\n            {isRunning === true ? <li style={li}><span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>{idleStatus}</span></li> : null}\r\n            {isRunning === true ? <li style={li}>{isDetectionRunning ? <span style={infoStyle}>DETECTING</span> : <span style={idleStyle}>SLEEPING</span>}</li> : null}\r\n            {isIdle === true ? <li style={li}><span style={idleStyle}>IDLE</span></li> : null}\r\n            <li style={li}>{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x >= 0 && y >= 0 ? ` (${x}, ${y})` : null}</li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nconst monitorStyleShape =  PropTypes.shape( { backgroundColor: PropTypes.string.isRequired\r\n                                            , color: PropTypes.string.isRequired\r\n                                            , activeColor: PropTypes.string.isRequired\r\n                                            , idleColor: PropTypes.string.isRequired\r\n                                            , stopColor: PropTypes.string.isRequired\r\n                                            })\r\n\r\nclass IdleMonitor extends Component {\r\n  static propTypes =  { showStatus: PropTypes.bool.isRequired\r\n                      , showControls: PropTypes.bool.isRequired\r\n                      , title: PropTypes.string.isRequired\r\n                      , theme: PropTypes.string.isRequired\r\n                      , invertTheme: PropTypes.bool.isRequired\r\n                      , dockTo: PropTypes.oneOf(['top', 'bottom'])\r\n                      , opacity: PropTypes.number.isRequired\r\n                      , paletteMap: PropTypes.object.isRequired\r\n                      , idleStatus: PropTypes.string.isRequired\r\n                      , isRunning: PropTypes.bool.isRequired\r\n                      , isIdle: PropTypes.bool.isRequired\r\n                      , isDetectionRunning: PropTypes.bool.isRequired\r\n                      , lastActive: PropTypes.number.isRequired\r\n                      , lastEvent: PropTypes.object.isRequired\r\n                      };\r\n  static defaultProps = { showStatus: true\r\n                        , showControls: true\r\n                        , title: 'IDLEMONITOR'\r\n                        , theme: 'solarized'\r\n                        , invertTheme: false\r\n                        , opacity: 1\r\n                        , dockTo: 'bottom'\r\n                        , paletteMap: { background: ['base00', 'base01']\r\n                                      , content: ['base04', 'base02', 'base05']\r\n                                      , accent: ['base0D', 'base0E', 'base0C']\r\n                                      }\r\n                        };\r\n  render() {\r\n    const { showStatus, children } = this.props\r\n    return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />\r\n  }\r\n}\r\n\r\nexport const mapIdleStateToProps = (state, ownProps) => {\r\n  const { idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent } = bisectState(state)\r\n\r\n  return  { idleStatus\r\n          , isRunning\r\n          , isDetectionRunning\r\n          , isIdle\r\n          , lastActive\r\n          , lastEvent\r\n          }\r\n}\r\n\r\nconst bisectState = state => {\r\n  if(process.env.NODE_ENV !== 'production') {\r\n    assert.ok(state, 'state is required')\r\n    assert.ok(state[ROOT_STATE_KEY], `'${ROOT_STATE_KEY}' state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)\r\n  }\r\n  return state[ROOT_STATE_KEY]\r\n}\r\n\r\nexport const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)\r\n\r\nexport default connectIdleMonitor(IdleMonitor)\r\n"
+    "content": "import React, { Component, PropTypes } from 'react'\r\nimport { connect } from 'react-redux'\r\nimport { createStateBisector } from 'redux-mux'\r\nimport { assert } from 'chai'\r\nimport { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'\r\nimport getStyle from './style'\r\n\r\n\r\nconst GenericIdleMonitor = props => {\r\n  const { panel, inner, title, ul, li, activeStyle, infoStyle, idleStyle, stopStyle, eventStyle } = getStyle(props)\r\n  const { showControls, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children } = props\r\n  const { type, x, y } = lastEvent\r\n  const lastDate = new Date(lastActive)\r\n  return (\r\n    <div>\r\n      {/*<children />*/}\r\n      <div style={panel}>\r\n        <div style={inner}>\r\n          <ul style={ul}>\r\n            <li style={title}>{props.title}</li>\r\n            <li style={li}>{isRunning === true ? <span style={activeStyle}>ON</span> : <span style={stopStyle}>OFF</span>}</li>\r\n            {isRunning === true ? <li style={li}><span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>{idleStatus}</span></li> : null}\r\n            {isRunning === true ? <li style={li}>{isDetectionRunning ? <span style={infoStyle}>DETECTING</span> : <span style={idleStyle}>SLEEPING</span>}</li> : null}\r\n            {isIdle === true ? <li style={li}><span style={idleStyle}>IDLE</span></li> : null}\r\n            <li style={li}>{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x >= 0 && y >= 0 ? ` (${x}, ${y})` : null}</li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  )\r\n}\r\n\r\nconst monitorStyleShape =  PropTypes.shape( { backgroundColor: PropTypes.string.isRequired\r\n                                            , color: PropTypes.string.isRequired\r\n                                            , activeColor: PropTypes.string.isRequired\r\n                                            , idleColor: PropTypes.string.isRequired\r\n                                            , stopColor: PropTypes.string.isRequired\r\n                                            })\r\n\r\nclass IdleMonitor extends Component {\r\n  static propTypes =  { showStatus: PropTypes.bool.isRequired\r\n                      , showControls: PropTypes.bool.isRequired\r\n                      , title: PropTypes.string.isRequired\r\n                      , theme: PropTypes.string.isRequired\r\n                      , invertTheme: PropTypes.bool.isRequired\r\n                      , dockTo: PropTypes.oneOf(['top', 'bottom'])\r\n                      , opacity: PropTypes.number.isRequired\r\n                      , paletteMap: PropTypes.object.isRequired\r\n                      , idleStatus: PropTypes.string.isRequired\r\n                      , isRunning: PropTypes.bool.isRequired\r\n                      , isIdle: PropTypes.bool.isRequired\r\n                      , isDetectionRunning: PropTypes.bool.isRequired\r\n                      , lastActive: PropTypes.number.isRequired\r\n                      , lastEvent: PropTypes.object.isRequired\r\n                      };\r\n  static defaultProps = { showStatus: true\r\n                        , showControls: true\r\n                        , title: 'IDLEMONITOR'\r\n                        , theme: 'solarized'\r\n                        , invertTheme: false\r\n                        , opacity: 1\r\n                        , dockTo: 'bottom'\r\n                        , paletteMap: { background: ['base00', 'base01']\r\n                                      , content: ['base04', 'base02', 'base05']\r\n                                      , accent: ['base0D', 'base0E', 'base0C']\r\n                                      }\r\n                        };\r\n  render() {\r\n    const { showStatus, children } = this.props\r\n    return showStatus ? <GenericIdleMonitor {...this.props} /> : <children {...this.props} />\r\n  }\r\n}\r\n\r\nconst bisectState = createStateBisector(ROOT_STATE_KEY)\r\n\r\nexport const mapIdleStateToProps = (state, ownProps) => {\r\n  const { idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent } = bisectState(state)\r\n\r\n  return  { idleStatus\r\n          , isRunning\r\n          , isDetectionRunning\r\n          , isIdle\r\n          , lastActive\r\n          , lastEvent\r\n          }\r\n}\r\n\r\n\r\nexport const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)\r\n\r\nexport default connectIdleMonitor(IdleMonitor)\r\n"
   },
   {
     "__docId__": 1,
@@ -25,7 +25,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 8,
+    "lineNumber": 9,
     "undocument": true,
     "type": {
       "types": [
@@ -46,7 +46,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 32,
+    "lineNumber": 33,
     "undocument": true,
     "type": {
       "types": [
@@ -67,7 +67,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": null,
     "description": null,
-    "lineNumber": 39,
+    "lineNumber": 40,
     "undocument": true,
     "interface": false,
     "extends": [
@@ -84,7 +84,7 @@
     "longname": "lib/index.js~IdleMonitor#render",
     "access": null,
     "description": null,
-    "lineNumber": 67,
+    "lineNumber": 68,
     "undocument": true,
     "params": [],
     "return": {
@@ -99,15 +99,15 @@
     "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "mapIdleStateToProps",
+    "name": "bisectState",
     "memberof": "lib/index.js",
-    "longname": "lib/index.js~mapIdleStateToProps",
+    "longname": "lib/index.js~bisectState",
     "access": null,
-    "export": true,
+    "export": false,
     "importPath": "react-redux-idle-monitor",
-    "importStyle": "{mapIdleStateToProps}",
+    "importStyle": null,
     "description": null,
-    "lineNumber": 73,
+    "lineNumber": 74,
     "undocument": true,
     "type": {
       "types": [
@@ -120,15 +120,15 @@
     "kind": "variable",
     "static": true,
     "variation": null,
-    "name": "bisectState",
+    "name": "mapIdleStateToProps",
     "memberof": "lib/index.js",
-    "longname": "lib/index.js~bisectState",
+    "longname": "lib/index.js~mapIdleStateToProps",
     "access": null,
-    "export": false,
+    "export": true,
     "importPath": "react-redux-idle-monitor",
-    "importStyle": null,
+    "importStyle": "{mapIdleStateToProps}",
     "description": null,
-    "lineNumber": 85,
+    "lineNumber": 76,
     "undocument": true,
     "type": {
       "types": [
@@ -149,7 +149,7 @@
     "importPath": "react-redux-idle-monitor",
     "importStyle": "{connectIdleMonitor}",
     "description": null,
-    "lineNumber": 93,
+    "lineNumber": 89,
     "undocument": true,
     "type": {
       "types": [
