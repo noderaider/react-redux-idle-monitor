@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { createStateBisector } from 'redux-mux'
 import { assert } from 'chai'
 import { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'
 import getStyle from './style'
@@ -70,6 +71,8 @@ class IdleMonitor extends Component {
   }
 }
 
+const bisectState = createStateBisector(ROOT_STATE_KEY)
+
 export const mapIdleStateToProps = (state, ownProps) => {
   const { idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent } = bisectState(state)
 
@@ -82,13 +85,6 @@ export const mapIdleStateToProps = (state, ownProps) => {
           }
 }
 
-const bisectState = state => {
-  if(process.env.NODE_ENV !== 'production') {
-    assert.ok(state, 'state is required')
-    assert.ok(state[ROOT_STATE_KEY], `'${ROOT_STATE_KEY}' state must exist in redux (should import configured reducers from redux-idle-monitor into combineReducers as a top-level 'idle' node)`)
-  }
-  return state[ROOT_STATE_KEY]
-}
 
 export const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)
 
