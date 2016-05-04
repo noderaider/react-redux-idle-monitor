@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { createStateBisector } from 'redux-mux'
+import { createStateSelector } from 'redux-mux'
 import { assert } from 'chai'
 import { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'
 import getStyle from './style'
@@ -71,11 +71,10 @@ class IdleMonitor extends Component {
   }
 }
 
-const bisectState = createStateBisector(ROOT_STATE_KEY)
+const selectState = createStateSelector(ROOT_STATE_KEY)
 
 export const mapIdleStateToProps = (state, ownProps) => {
-  const { idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent } = bisectState(state)
-
+  const { idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent } = selectState(state)
   return  { idleStatus
           , isRunning
           , isDetectionRunning
@@ -85,7 +84,5 @@ export const mapIdleStateToProps = (state, ownProps) => {
           }
 }
 
-
 export const connectIdleMonitor = ReactComponent => connect(mapIdleStateToProps)(ReactComponent)
-
 export default connectIdleMonitor(IdleMonitor)
