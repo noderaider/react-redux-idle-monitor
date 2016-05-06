@@ -80,8 +80,8 @@ Name            | Description
 -------------   | -------------
 `showStatus`    | By default, set to `true`.
 `showControls`  | By default, set to `false`
-`title`         | By default, set to `IDLEMONITOR`
-`theme`         | By default, set to `solarized`
+`idleTitle`     | By default, set to `IDLEMONITOR`
+`idleTheme`     | By default, set to `solarized`
 `invertTheme`   | By default, set to `false` (dark is the standard)
 `dockTo`        | By default, set to 'bottom'. Supports 'top' and 'bottom'.
 `opacity`       | By default, set to `1`

@@ -3,8 +3,8 @@ import * as themes from 'redux-devtools-themes'
 const noop = () => {}
 
 export default function getStyle(props) {
-  const { theme, invertTheme, paletteMap, dockTo, opacity, isRunning, isDetectionRunning, isIdle, style } = props
-  const palette = palettize(paletteMap)(theme)(invertTheme)
+  const { idleTheme, invertTheme, paletteMap, dockTo, opacity, isRunning, isDetectionRunning, isIdle, style } = props
+  const palette = palettize(paletteMap)(idleTheme)(invertTheme)
 
   const panel = { position: 'fixed'
                 , zIndex: 9999999
