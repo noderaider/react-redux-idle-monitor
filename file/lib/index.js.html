@@ -33,96 +33,20 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getStyle">getStyle</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-connectIdleMonitor">connectIdleMonitor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-createConnector">createConnector</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mapIdleStateToProps">mapIdleStateToProps</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">lib/index.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import React, { Component, PropTypes, Children, cloneElement } from &apos;react&apos;
-import { connect } from &apos;react-redux&apos;
-import { createStateSelector } from &apos;redux-mux&apos;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { createStateSelector } from &apos;redux-mux&apos;
 import { assert } from &apos;chai&apos;
 import { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from &apos;redux-idle-monitor/lib/constants&apos;
 import getStyle from &apos;./style&apos;
 
 const IS_DEV = process.env.NODE_ENV !== &apos;production&apos;
-
-const IdleMonitorView = props =&gt; {
-  const { showControls, idleTitle, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children, mounted } = props
-  const { panel, inner, title, ul, li, activeStyle, infoStyle, idleStyle, stopStyle, eventStyle } = getStyle(props)
-  const { type, x, y } = lastEvent
-  const lastDate = new Date(lastActive)
-
-  return (
-    &lt;div&gt;
-      &lt;div style={panel}&gt;
-        &lt;div style={inner}&gt;
-          &lt;ul style={ul}&gt;
-            &lt;li style={title}&gt;{idleTitle}&lt;/li&gt;
-            &lt;li style={li}&gt;{isRunning === true ? &lt;span style={activeStyle}&gt;ON&lt;/span&gt; : &lt;span style={stopStyle}&gt;OFF&lt;/span&gt;}&lt;/li&gt;
-            {isRunning === true ? &lt;li style={li}&gt;&lt;span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}&gt;{idleStatus}&lt;/span&gt;&lt;/li&gt; : null}
-            {isRunning === true ? &lt;li style={li}&gt;{isDetectionRunning ? &lt;span style={infoStyle}&gt;DETECTING&lt;/span&gt; : &lt;span style={idleStyle}&gt;SLEEPING&lt;/span&gt;}&lt;/li&gt; : null}
-            {isIdle === true ? &lt;li style={li}&gt;&lt;span style={idleStyle}&gt;IDLE&lt;/span&gt;&lt;/li&gt; : null}
-            {mounted === true ? &lt;li style={li}&gt;{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x &gt;= 0 &amp;&amp; y &gt;= 0 ? ` (${x}, ${y})` : null}&lt;/li&gt; : null}
-          &lt;/ul&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  )
-}
-
-const monitorStyleShape =  PropTypes.shape( { backgroundColor: PropTypes.string.isRequired
-                                            , color: PropTypes.string.isRequired
-                                            , activeColor: PropTypes.string.isRequired
-                                            , idleColor: PropTypes.string.isRequired
-                                            , stopColor: PropTypes.string.isRequired
-                                            })
-
-class IdleMonitor extends Component {
-  static propTypes =  { showStatus: PropTypes.bool.isRequired
-                      , showControls: PropTypes.bool.isRequired
-                      , idleTitle: PropTypes.string.isRequired
-                      , idleTheme: PropTypes.string.isRequired
-                      , invertTheme: PropTypes.bool.isRequired
-                      , dockTo: PropTypes.oneOf([&apos;top&apos;, &apos;bottom&apos;])
-                      , opacity: PropTypes.number.isRequired
-                      , paletteMap: PropTypes.object.isRequired
-                      , idleStatus: PropTypes.string.isRequired
-                      , isRunning: PropTypes.bool.isRequired
-                      , isIdle: PropTypes.bool.isRequired
-                      , isDetectionRunning: PropTypes.bool.isRequired
-                      , lastActive: PropTypes.number.isRequired
-                      , lastEvent: PropTypes.object.isRequired
-                      };
-  static defaultProps = { showStatus: IS_DEV
-                        , showControls: false
-                        , idleTitle: &apos;IDLEMONITOR&apos;
-                        , idleTheme: &apos;solarized&apos;
-                        , invertTheme: false
-                        , opacity: 1
-                        , dockTo: &apos;bottom&apos;
-                        , paletteMap: { background: [&apos;base00&apos;, &apos;base01&apos;]
-                                      , content: [&apos;base04&apos;, &apos;base02&apos;, &apos;base05&apos;]
-                                      , accent: [&apos;base0D&apos;, &apos;base0E&apos;, &apos;base0C&apos;]
-                                      }
-                        };
-  constructor(props) {
-    super(props)
-    this.state = { mounted: false }
-  }
-  componentDidMount() { this.setState({ mounted: true }) }
-  render() {
-    const { children, showStatus, showControls, idleTitle, idleTheme, invertTheme, dockTo, opacity, paletteMap, ...idleProps } = this.props
-    return (
-      &lt;div className=&quot;idle-monitor&quot;&gt;
-        {children ? Children.map(children, x =&gt; cloneElement(x, { ...idleProps })) : null}
-        {showStatus ? &lt;IdleMonitorView {...this.props} mounted={this.state.mounted} /&gt; : null}
-      &lt;/div&gt;
-    )
-  }
-}
+const IS_BROWSER = typeof window === &apos;object&apos;
 
 const selectState = createStateSelector(ROOT_STATE_KEY)
 
@@ -137,8 +61,94 @@ export const mapIdleStateToProps = (state, ownProps) =&gt; {
           }
 }
 
-export const connectIdleMonitor = ReactComponent =&gt; connect(mapIdleStateToProps)(ReactComponent)
-export default connectIdleMonitor(IdleMonitor)
+export const createConnector = ({ connect }) =&gt; ReactComponent =&gt; connect(mapIdleStateToProps)(ReactComponent)
+
+/** Exports a factory that creates the IdleMonitor component */
+export default ({ React, connect }) =&gt; {
+  if(IS_DEV) {
+    assert.ok(React, &apos;react-redux-idle-monitor requires React as a dependency.&apos;)
+    assert.typeOf(React, &apos;object&apos;)
+    assert.ok(connect, &apos;react-redux-idle-monitor requires connect (react-redux) as a dependency.&apos;)
+    assert.typeOf(connect, &apos;function&apos;)
+  }
+  const { Component, PropTypes, Children, cloneElement } = React
+  const connectIdleMonitor = createConnector({ connect })
+  const IdleMonitorView = props =&gt; {
+    const { showControls, idleTitle, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children, mounted } = props
+    const { panel, inner, title, ul, li, activeStyle, infoStyle, idleStyle, stopStyle, eventStyle } = getStyle(props)
+    const { type, x, y } = lastEvent
+    const lastDate = new Date(lastActive)
+
+    return (
+      &lt;div&gt;
+        &lt;div style={panel}&gt;
+          &lt;div style={inner}&gt;
+            &lt;ul style={ul}&gt;
+              &lt;li style={title}&gt;{idleTitle}&lt;/li&gt;
+              &lt;li style={li}&gt;{isRunning === true ? &lt;span style={activeStyle}&gt;ON&lt;/span&gt; : &lt;span style={stopStyle}&gt;OFF&lt;/span&gt;}&lt;/li&gt;
+              {isRunning === true ? &lt;li style={li}&gt;&lt;span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}&gt;{idleStatus}&lt;/span&gt;&lt;/li&gt; : null}
+              {isRunning === true ? &lt;li style={li}&gt;{isDetectionRunning ? &lt;span style={infoStyle}&gt;DETECTING&lt;/span&gt; : &lt;span style={idleStyle}&gt;SLEEPING&lt;/span&gt;}&lt;/li&gt; : null}
+              {isIdle === true ? &lt;li style={li}&gt;&lt;span style={idleStyle}&gt;IDLE&lt;/span&gt;&lt;/li&gt; : null}
+              {mounted === true ? &lt;li style={li}&gt;{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x &gt;= 0 &amp;&amp; y &gt;= 0 ? ` (${x}, ${y})` : null}&lt;/li&gt; : null}
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    )
+  }
+
+  const monitorStyleShape =  PropTypes.shape( { backgroundColor: PropTypes.string.isRequired
+                                              , color: PropTypes.string.isRequired
+                                              , activeColor: PropTypes.string.isRequired
+                                              , idleColor: PropTypes.string.isRequired
+                                              , stopColor: PropTypes.string.isRequired
+                                              })
+
+  class IdleMonitor extends Component {
+    static propTypes =  { showStatus: PropTypes.bool.isRequired
+                        , showControls: PropTypes.bool.isRequired
+                        , idleTitle: PropTypes.string.isRequired
+                        , idleTheme: PropTypes.string.isRequired
+                        , invertTheme: PropTypes.bool.isRequired
+                        , dockTo: PropTypes.oneOf([&apos;top&apos;, &apos;bottom&apos;])
+                        , opacity: PropTypes.number.isRequired
+                        , paletteMap: PropTypes.object.isRequired
+                        , idleStatus: PropTypes.string.isRequired
+                        , isRunning: PropTypes.bool.isRequired
+                        , isIdle: PropTypes.bool.isRequired
+                        , isDetectionRunning: PropTypes.bool.isRequired
+                        , lastActive: PropTypes.number.isRequired
+                        , lastEvent: PropTypes.object.isRequired
+                        };
+    static defaultProps = { showStatus: IS_DEV
+                          , showControls: false
+                          , idleTitle: &apos;IDLEMONITOR&apos;
+                          , idleTheme: &apos;solarized&apos;
+                          , invertTheme: false
+                          , opacity: 1
+                          , dockTo: &apos;bottom&apos;
+                          , paletteMap: { background: [&apos;base00&apos;, &apos;base01&apos;]
+                                        , content: [&apos;base04&apos;, &apos;base02&apos;, &apos;base05&apos;]
+                                        , accent: [&apos;base0D&apos;, &apos;base0E&apos;, &apos;base0C&apos;]
+                                        }
+                          };
+    constructor(props) {
+      super(props)
+      this.state = { mounted: false }
+    }
+    componentDidMount() { this.setState({ mounted: true }) }
+    render() {
+      const { children, showStatus, showControls, idleTitle, idleTheme, invertTheme, dockTo, opacity, paletteMap, ...idleProps } = this.props
+      return (
+        &lt;div className=&quot;idle-monitor&quot;&gt;
+          {children ? Children.map(children, x =&gt; cloneElement(x, { ...idleProps })) : null}
+          {showStatus ? &lt;IdleMonitorView {...this.props} mounted={this.state.mounted} /&gt; : null}
+        &lt;/div&gt;
+      )
+    }
+  }
+  return connectIdleMonitor(IdleMonitor)
+}
 </code></pre>
 
 </div>
