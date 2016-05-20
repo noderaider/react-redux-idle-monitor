@@ -7,15 +7,14 @@ import getStyle from './style'
 
 const IS_DEV = process.env.NODE_ENV !== 'production'
 
-
 const IdleMonitorView = props => {
+  const { showControls, idleTitle, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children, mounted } = props
   const { panel, inner, title, ul, li, activeStyle, infoStyle, idleStyle, stopStyle, eventStyle } = getStyle(props)
-  const { showControls, idleTitle, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children } = props
   const { type, x, y } = lastEvent
   const lastDate = new Date(lastActive)
+
   return (
     <div>
-      {/*<children />*/}
       <div style={panel}>
         <div style={inner}>
           <ul style={ul}>
@@ -24,7 +23,7 @@ const IdleMonitorView = props => {
             {isRunning === true ? <li style={li}><span style={idleStatus === IDLESTATUS_ACTIVE ? activeStyle : idleStyle}>{idleStatus}</span></li> : null}
             {isRunning === true ? <li style={li}>{isDetectionRunning ? <span style={infoStyle}>DETECTING</span> : <span style={idleStyle}>SLEEPING</span>}</li> : null}
             {isIdle === true ? <li style={li}><span style={idleStyle}>IDLE</span></li> : null}
-            <li style={li}>{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x >= 0 && y >= 0 ? ` (${x}, ${y})` : null}</li>
+            {mounted === true ? <li style={li}>{lastDate.toJSON().substr(11, 8)}{type ? ` [${type}]` : null}{x >= 0 && y >= 0 ? ` (${x}, ${y})` : null}</li> : null}
           </ul>
         </div>
       </div>
@@ -67,12 +66,17 @@ class IdleMonitor extends Component {
                                       , accent: ['base0D', 'base0E', 'base0C']
                                       }
                         };
+  constructor(props) {
+    super(props)
+    this.state = { mounted: false }
+  }
+  componentDidMount() { this.setState({ mounted: true }) }
   render() {
     const { children, showStatus, showControls, idleTitle, idleTheme, invertTheme, dockTo, opacity, paletteMap, ...idleProps } = this.props
     return (
       <div className="idle-monitor">
         {children ? Children.map(children, x => cloneElement(x, { ...idleProps })) : null}
-        {showStatus ? <IdleMonitorView {...this.props} /> : null}
+        {showStatus ? <IdleMonitorView {...this.props} mounted={this.state.mounted} /> : null}
       </div>
     )
   }
