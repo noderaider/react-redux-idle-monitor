@@ -7,8 +7,8 @@
       "expectCount": 2,
       "actualCount": 0,
       "undocumentLines": [
-        94,
-        83
+        98,
+        87
       ]
     },
     "lib/style.js": {
