@@ -33,7 +33,7 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getStyle">getStyle</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-connectIdleMonitor">connectIdleMonitor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-createConnector">createConnector</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mapIdleStateToProps">mapIdleStateToProps</a></span></span></li>
 </ul>
 </div>
@@ -43,16 +43,29 @@
 <p><a href="https://nodei.co/npm/react-redux-idle-monitor/"><img src="https://nodei.co/npm/react-redux-idle-monitor.png?stars=true&amp;downloads=true" alt="NPM"></a></p>
 <p>React Redux higher order component for idle state monitoring.</p>
 <p><code>npm i -S react-redux-idle-monitor</code></p>
+<h4 id="changelog">CHANGELOG</h4>
+<p><strong>0.3.x</strong> <em>5/19/2016</em> =&gt; Less bundled dependencies and server side rendering</p>
+<ul>
+<li><p>In effort to allow freedom of build systems and keep bundles as small and least redundant as possible, this module now exports factories that take in heavy React / Redux dependencies and export the same functions as they used to expose. Documentation has been updated accordingly.</p>
+</li>
+<li><p>Style loading moved to componentDidMount allowing server side rendering to work now.</p>
+</li>
+</ul>
+<h4 id="whats-it-do-">Whats it do?</h4>
 <p>Works in tandem with <a href="https://npmjs.com/packages/redux-idle-monitor">redux-idle-monitor</a> to connect information about a users activity / idle state into your React components.</p>
 <p>This project includes an optional React IdleMonitor component that can be imported and used standalone or as a wrapper for your components (auto-connects to your redux store and pulls out the idle state information for you).  When developing, you may set the &quot;showStatus&quot; prop to true on the IdleMonitor component, which will add a docked element to your page that shows the current active / idle state of the user, last event that triggered activity, and additional information.</p>
 <p><img src="/src/public/assets/idle-monitor.gif" alt="idle monitor"></p>
 <p>See a working demo in a real project at <a href="https://cchamberlain.github.io/redux-webpack-boilerplate">redux-webpack-boilerplate</a></p>
 <h4 id="usage">Usage</h4>
 <p>There are a couple of ways to use react-redux-idle-monitor.</p>
-<h3 id="connectidlemonitor-property-injector">connectIdleMonitor Property Injector</h3>
-<p>The simplest way to get idle props to your component is to wrap the component with the <code>connectIdleMonitor</code> function export from <code>react-redux-idle-monitor</code>.  Wrapping with the <code>connectIdleMonitor</code> function will inject your component with the idle properties shown in the example below.</p>
+<h3 id="createconnector-redux-idle-state-connect-factory">createConnector redux idle state connect factory</h3>
+<p>The simplest way to get idle props to your component is to wrap the component with the connector component. Import the <code>createConnector</code> factory from <code>react-redux-idle-monitor</code> and pass it the connect dependency from &apos;react-redux&apos;.  This may seem unusual, but it ensures this library is as small as possible and works with all build systems.</p>
+<p>Wrapping your component with the <code>connectIdleMonitor</code> function as depicted below will inject your component with the idle properties all of the idle properties.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">import React, { Component, PropTypes } from &apos;react&apos;
-import { connectIdleMonitor } from &apos;react-redux-idle-monitor&apos;
+import { connect } from &apos;react-redux&apos;
+import { createConnector } from &apos;react-redux-idle-monitor&apos;
+
+const connectIdleMonitor = createConnector({ connect })
 
 class MyMonitoringComponent extends Component {
   // connectIdleMonitor will tack these props from your redux &apos;idle&apos; state
@@ -77,9 +90,13 @@ class MyMonitoringComponent extends Component {
 export default connectIdleMonitor(MyMonitoringComponent)</code>
 </code></pre>
 <hr>
-<h3 id="-idlemonitor-react-component"><code>IdleMonitor</code> React Component</h3>
-<p>Another option is to export the IdleMonitor react component as shown below. This monitor has an option to <code>showStatus</code> which will add a docked bar to the page with realtime information on the users idle status and is useful during development.</p>
-<pre><code class="lang-js"><code class="source-code prettyprint">import IdleMonitor from &apos;react-redux-idle-monitor&apos;
+<h3 id="-createidlemonitor-docked-react-component-factory-recommended-as-dev-tool-"><code>createIdleMonitor</code> docked React component factory (recommended as dev tool)</h3>
+<p>Another option is to export the createIdleMonitor React component factory as shown below. This monitor has an option to <code>showStatus</code> which will add a docked bar to the page with realtime information on the users idle status and is useful during development. It is the same component from the example at <a href="http://redux-webpack-boilerplate.js.org">redux-webpack-boilerplate</a>.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">import React from &apos;react&apos;
+import { connect } from &apos;react-redux&apos;
+import createIdleMonitor from &apos;react-redux-idle-monitor&apos;
+
+const IdleMonitor = createIdleMonitor({ React, connect })
 
 const MyComponent = props =&gt; (
   &lt;IdleMonitor showStatus={true} /&gt;

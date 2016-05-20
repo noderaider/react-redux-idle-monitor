@@ -1,8 +1,8 @@
 window.esdocSearchIndex = [
   [
-    "react-redux-idle-monitor~connectidlemonitor",
-    "variable/index.html#static-variable-connectIdleMonitor",
-    "<span>connectIdleMonitor</span> <span class=\"search-result-import-path\">react-redux-idle-monitor</span>",
+    "react-redux-idle-monitor~createconnector",
+    "variable/index.html#static-variable-createConnector",
+    "<span>createConnector</span> <span class=\"search-result-import-path\">react-redux-idle-monitor</span>",
     "variable"
   ],
   [
