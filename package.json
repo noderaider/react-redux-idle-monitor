@@ -1,6 +1,6 @@
 {
   "name": "react-redux-idle-monitor",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "React higher order component for redux-idle-monitor (WIP)",
   "main": "lib/index.js",
   "files": [
