@@ -2,6 +2,7 @@ import { createStateSelector } from 'redux-mux'
 import { assert } from 'chai'
 import { ROOT_STATE_KEY, IDLESTATUS_ACTIVE } from 'redux-idle-monitor/lib/constants'
 import getStyle from './style'
+import PropTypes from 'prop-types'
 
 const IS_DEV = process.env.NODE_ENV !== 'production'
 const IS_BROWSER = typeof window === 'object'
@@ -29,7 +30,7 @@ export default ({ React, connect }) => {
     assert.ok(connect, 'react-redux-idle-monitor requires connect (react-redux) as a dependency.')
     assert.typeOf(connect, 'function')
   }
-  const { Component, PropTypes, Children, cloneElement } = React
+  const { Component, Children, cloneElement } = React
   const connectIdleMonitor = createConnector({ connect })
   const IdleMonitorView = props => {
     const { showControls, idleTitle, idleStatus, isRunning, isDetectionRunning, isIdle, lastActive, lastEvent, children, mounted } = props
