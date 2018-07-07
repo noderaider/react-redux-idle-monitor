@@ -26,7 +26,7 @@ This project includes an optional React IdleMonitor component that can be import
 
 ![idle monitor](/src/public/assets/idle-monitor.gif)
 
-See a working demo in a real project at [redux-webpack-boilerplate](https://cchamberlain.github.io/redux-webpack-boilerplate)
+See a working demo in a real project at [redux-webpack-boilerplate](https://redux-webpack-boilerplate.js.org/)
 
 #### Usage
 
